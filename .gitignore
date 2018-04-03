@@ -18,3 +18,5 @@ cabal.sandbox.config
 .stack-work/
 cabal.project.local
 .HTF/
+*.sqlite3
+.dir-locals.el
