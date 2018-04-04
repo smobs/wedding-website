@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bef9617467c3a1ad95849d9419835ff0006f528e87a793f696d2c487ec726634
+-- hash: b165d47ca8c3323c1852f0c84cf3bf0c6df407d9568805003e7de68eb31a6bce
 
 name:           wedding-website
 version:        0.0.0
@@ -72,6 +72,7 @@ library
       Handler.Comment
       Handler.Common
       Handler.Home
+      Handler.Invite
       Handler.Profile
       Import
       Import.NoFoundation

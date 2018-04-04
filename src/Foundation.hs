@@ -91,7 +91,7 @@ instance Yesod App where
     -- To add it, chain it together with the defaultMiddleware: yesodMiddleware = defaultYesodMiddleware . defaultCsrfMiddleware
     -- For details, see the CSRF documentation in the Yesod.Core.Handler module of the yesod-core package.
     yesodMiddleware = defaultYesodMiddleware
-
+    
     defaultLayout widget = do
         master <- getYesod
         mmsg <- getMessage
@@ -153,6 +153,9 @@ instance Yesod App where
     isAuthorized FaviconR _ = return Authorized
     isAuthorized RobotsR _ = return Authorized
     isAuthorized (StaticR _) _ = return Authorized
+    isAuthorized (InviteR) _ = return Authorized
+    isAuthorized (InfoR) _ = return Authorized
+    isAuthorized (RsvpR) _ = return Authorized
 
     isAuthorized ProfileR _ = isAuthenticated
 
