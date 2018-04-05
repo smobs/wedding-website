@@ -1,26 +1,29 @@
 <!DOCTYPE svg >
 <svg xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink" 
-    viewBox="7.5,10,112.5,100">
+    viewBox="0,0,100,100">
                 <symbol id="zig">
                     <line x1="00" y1="00" x2="05" y2="05" style="stroke:black;stroke-width:0.35" />
                     <line x1="05" y1="05" x2="10" y2="00" style="stroke:black;stroke-width:0.35" />
                 </symbol>
                 <symbol id="zigrow">
-                    <use xlink:href="#zig" x="000" y="0"/>
-                    <use xlink:href="#zig" x="010" y="0"/>
-                    <use xlink:href="#zig" x="020" y="0"/>
-                    <use xlink:href="#zig" x="030" y="0"/>
-                    <use xlink:href="#zig" x="040" y="0"/>
-                    <use xlink:href="#zig" x="050" y="0"/>
-                    <use xlink:href="#zig" x="060" y="0"/>
-                    <use xlink:href="#zig" x="070" y="0"/>
-                    <use xlink:href="#zig" x="080" y="0"/>
-                    <use xlink:href="#zig" x="090" y="0"/>
-                    <use xlink:href="#zig" x="100" y="0"/>
-                    <use xlink:href="#zig" x="110" y="0"/>
+                    <use xlink:href="#zig" x="-05" y="0"/>
+                    <use xlink:href="#zig" x="005" y="0"/>
+                    <use xlink:href="#zig" x="015" y="0"/>
+                    <use xlink:href="#zig" x="025" y="0"/>
+                    <use xlink:href="#zig" x="035" y="0"/>
+                    <use xlink:href="#zig" x="045" y="0"/>
+                    <use xlink:href="#zig" x="055" y="0"/>
+                    <use xlink:href="#zig" x="065" y="0"/>
+                    <use xlink:href="#zig" x="075" y="0"/>
+                    <use xlink:href="#zig" x="085" y="0"/>
+                    <use xlink:href="#zig" x="095" y="0"/>
+                    <use xlink:href="#zig" x="105" y="0"/>
+                    <use xlink:href="#zig" x="115" y="0"/>
                 </symbol>
                 <symbol id="zigblock">
+                <use xlink:href="#zigrow" x="0" y="-5"/>
+                <use xlink:href="#zigrow" x="0" y="-2.5"/>
                 <use xlink:href="#zigrow" x="0" y="0"/>
                 <use xlink:href="#zigrow" x="0" y="2.5"/>
                 <use xlink:href="#zigrow" x="0" y="5"/>
