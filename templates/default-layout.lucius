@@ -3,7 +3,6 @@
     background-color: white;
     min-height: 90vh;
     min-width: 80vw;
-    border: 1px solid black;
 }
 .pageContent {
     display:flex;
@@ -19,9 +18,17 @@ body {
     padding-bottom: 5vh;
     padding-left: 10vw;
     padding-right: 10vw;
+    margin:0;
     display:flex;
 }
+
 html {
     height:100%;
     margin: 0px; padding: 0px;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
