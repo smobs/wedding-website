@@ -1,3 +1,15 @@
 <div .pageContainer>
+    <div .header>
+        <ul .navbar>
+            <li .pagelink>
+                <a href="@{InviteR}">
+                    Home
+            <li .pagelink>
+                <a href="@{RsvpR}">
+                    RSVP
+            <li .pagelink>
+                <a href="@{InfoR}">
+                    Information
+                
     <div .pageContent>
             ^{widget}
