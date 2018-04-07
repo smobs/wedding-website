@@ -15,26 +15,30 @@ getInfoR = do
 
 getRsvpR :: Handler Html
 getRsvpR = do
-    (formWidget, formEnctype) <- generateFormPost guestRsvpForm
-    defaultLayout $(widgetFile "rsvp")
+  (formWidget, formEnctype) <- generateFormPost guestRsvpForm
+  
+  defaultLayout $(widgetFile "rsvp")
 
 postRsvpR :: Handler Html
 postRsvpR = do
   defaultLayout $(widgetFile "invite")
 
+yesNo = radioFieldList [("Yes" :: Text, True), ("No" :: Text, False)]
+
 guestRsvpForm :: Form GuestRsvp
-guestRsvpForm =
-  renderDivs $
-  GuestRsvp <$> (areq yesNo textSettings (Just False)) <*>
-  (areq textField textSettings Nothing) <*>
-  (areq yesNo textSettings (Just False))
+guestRsvpForm = do
+  let rsvp = GuestRsvp <$> areq yesNo ("Can you come" {fsAttrs = [("class", "attending-control")]}) (Just True) 
+                   <*> areq textField textSettings Nothing 
+                   <*> areq yesNo ("Do you need the bus" {fsAttrs = [("class", "bus-control")]}) (Just True) 
+  
+  renderDivs rsvp
   where
     textSettings =
       FieldSettings
-      { fsLabel = "Dietary requirements"
+      { fsLabel = "Do you have any dietary requirements?"
       , fsTooltip = Nothing
       , fsId = Nothing
       , fsName = Nothing
-      , fsAttrs = [("class", "form-control"), ("placeholder", "I hate peas")]
+      , fsAttrs = [("class", "dietcontrol"), ("placeholder", "I hate peas")]
       }
-    yesNo = radioFieldList [("Yes" :: Text, True), ("No" :: Text, False)]
+
