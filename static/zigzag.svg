@@ -1,7 +1,7 @@
 <!DOCTYPE svg >
 <svg xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink" 
-    viewBox="0,0,94,100">
+    viewBox="0,0,94,96">
                 <symbol id="zig">
                     <line x1="00" y1="00" x2="06" y2="6" style="stroke:black;stroke-width:0.25" />
                     <line x1="06" y1="6" x2="12" y2="00" style="stroke:black;stroke-width:0.25" />
