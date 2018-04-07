@@ -10,23 +10,35 @@
     align-items: center;
     flex-flow:column
 }
+.navbar {
+    display:flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    justify-content: space-around;
+    padding:0px;
+}
+.pagelink{
+    list-style:none;
+    margin-left:10px;
+    margin-right:10px;
+}
 body {
     background-image: url("@{StaticR zigzag_svg}");
     background-size: cover;
-    min-height: 100%;
     padding-top: 5vh;
     padding-bottom: 5vh;
     padding-left: 10vw;
     padding-right: 10vw;
+}
+body {
     margin:0;
     display:flex;
+    min-height: 100%;
 }
-
 html {
     height:100%;
     margin: 0px; padding: 0px;
 }
-
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
