@@ -1,8 +1,8 @@
 .pageContainer {
     padding: 35px;
     background-color: white;
-    min-height: 90vh;
-    min-width: 80vw;
+    min-height: 80vh;
+    min-width: 70vw;
 }
 .pageContent {
     display:flex;
@@ -25,10 +25,10 @@
 body {
     background-image: url("@{StaticR zigzag_svg}");
     background-size: cover;
-    padding-top: 5vh;
-    padding-bottom: 5vh;
-    padding-left: 10vw;
-    padding-right: 10vw;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+    padding-left: 15vw;
+    padding-right: 15vw;
 }
 body {
     margin:0;
