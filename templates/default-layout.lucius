@@ -49,7 +49,17 @@ h1,h2,h3,h4,p,a {
     text-transform: uppercase;
     font-weight: normal;
 }
+a {
+    text-decoration: none;
+    color:#993399;
+    padding-left:3px;
+    padding-right:3px;
+}
 
+a:hover{
+    background-color:#993399;
+    color:white;
+}
 .splash {
     color: #993399;
 }
