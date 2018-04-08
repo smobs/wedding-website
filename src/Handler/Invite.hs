@@ -15,6 +15,7 @@ getInfoR = do
 
 getRsvpR :: Handler Html
 getRsvpR = do
+  _ <- requireAuthPair
   (formWidget, formEnctype) <- generateFormPost guestRsvpForm
   
   defaultLayout $(widgetFile "rsvp")

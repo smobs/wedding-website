@@ -9,10 +9,6 @@
 
 / HomeR GET POST
 
-/comments CommentR POST
-
-/profile ProfileR GET
-
 /invite InviteR GET
 /invite/rsvp RsvpR GET POST
 /invite/information InfoR GET
