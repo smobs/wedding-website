@@ -28,7 +28,7 @@ Household
 GuestRsvp
     guestId GuestId
     attending Bool
-    dietaryRequirements Text
+    dietaryRequirements Text Maybe
     needsTheBus Bool
     UniqueRsvp guestId
 
