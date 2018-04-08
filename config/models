@@ -20,6 +20,7 @@ Comment json -- Adding "json" causes ToJSON and FromJSON instances to be derived
 Guest
     firstName Text
     lastName Text
+    UniqueGuest firstName lastName
 
 Household
     members [GuestId]

@@ -226,17 +226,25 @@ instance YesodAuth App where
     -- Override the above two destinations when a Referer: header is present
   redirectToReferer _ = True
   authenticate Creds {..} =
-    return
       (case credsPlugin of
          "hardcoded" ->
-           case lookupUser credsIdent of
+            return $ case lookupUser credsIdent of
              Nothing -> UserError InvalidLogin
-             Just m -> Authenticated (Right (manUserName m)))
+             Just m -> Authenticated (Right (manUserName m))
+         _ ->
+           runDB $ do
+             x <- getBy $ UniqueUser $ credsIdent
+             case x of
+               Just (Entity uid _) -> return $ (Authenticated . Left) uid
+               Nothing ->
+                 (Authenticated . Left) <$>
+                 insert User {userIdent = credsIdent, userPassword = Nothing})
   -- You can add other plugins like Google Email, email or OAuth here
   authPlugins app = extraAuthPlugins
         -- Enable authDummy login if enabled.
     where
-      extraAuthPlugins = [authHardcoded]
+      extraAuthPlugins =
+        [authDummy | appAuthDummyLogin $ appSettings app] ++ [authHardcoded]
   authHttpManager = getHttpManager
 
 -- | Access function to determine if a user is logged in.
