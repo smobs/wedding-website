@@ -15,20 +15,40 @@ getInfoR = do
 
 getRsvpR :: Handler Html
 getRsvpR = do
+  mguest <- getUserRsvp
+  case mguest of
+    Just guest -> do
+      (formWidget, formEnctype) <- generateFormPost $ guestRsvpForm guest
+      defaultLayout $(widgetFile "rsvp")
+    Nothing -> defaultLayout $(widgetFile "invite")
+
+postRsvpR :: Handler Html
+postRsvpR = do
+  mguest <- getUserRsvp
+  case mguest of
+    Just guest -> do
+      ((res, widget), enctype) <- runFormPost $ guestRsvpForm guest
+      case res of
+        FormSuccess g@(GuestRsvp gid _ _ _) -> do
+          runDB $ do 
+            deleteBy (UniqueRsvp gid)
+            insert_ g 
+        _ -> pure ()
+      defaultLayout $(widgetFile "invite")
+    _ -> defaultLayout $(widgetFile "invite")
+
+getUserRsvp :: Handler (Maybe GuestRsvp)
+getUserRsvp = do
   (egid, _) <- requireAuthPair
   case egid of
     Left gid -> do
       mguest <- runDB (getBy (UniqueRsvp gid))
-      let guest = case mguest of
-            Just (Entity _ g)  -> g
-            _ -> GuestRsvp gid True Nothing False 
-      (formWidget, formEnctype) <- generateFormPost $ guestRsvpForm guest
-      defaultLayout $(widgetFile "rsvp")
-    _ -> defaultLayout $(widgetFile "invite")
-
-postRsvpR :: Handler Html
-postRsvpR = do
-  defaultLayout $(widgetFile "invite")
+      let guest =
+            case mguest of
+              Just (Entity _ g) -> g
+              _ -> GuestRsvp gid True Nothing False
+      return (Just guest)
+    _ -> return Nothing
 
 yesNo = radioFieldList [("Yes" :: Text, True), ("No" :: Text, False)]
 
