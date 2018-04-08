@@ -213,12 +213,12 @@ validPassword u p =
 lookupUser :: Text -> Maybe SiteManager
 lookupUser username = find (\m -> manUserName m == username) siteManagers
 
-instance PathPiece (Either UserId Text) where
+instance PathPiece (Either GuestId Text) where
   fromPathPiece = readMaybe . unpack
   toPathPiece = pack . show
 
 instance YesodAuth App where
-  type AuthId App = Either UserId Text
+  type AuthId App = Either GuestId Text
     -- Where to send a user after successful login
   loginDest _ = HomeR
     -- Where to send a user after logout
@@ -234,12 +234,12 @@ instance YesodAuth App where
            Just m -> Authenticated (Right (manUserName m))
        _ ->
          runDB $ do
-           x <- getBy $ UniqueUser $ credsIdent
+           x <- getBy $ UniqueGuest $ credsIdent
            case x of
              Just (Entity uid _) -> return $ (Authenticated . Left) uid
              Nothing ->
                (Authenticated . Left) <$>
-               insert User {userIdent = credsIdent, userPassword = Nothing})
+               insert Guest {guestIdent = credsIdent})
   -- You can add other plugins like Google Email, email or OAuth here
   authPlugins app = extraAuthPlugins
         -- Enable authDummy login if enabled.
@@ -258,7 +258,7 @@ isAuthenticated = do
       Just _ -> Authorized
 
 instance YesodAuthPersist App where
-  type AuthEntity App = Either User SiteManager
+  type AuthEntity App = Either Guest SiteManager
   getAuthEntity (Left uid) = do
     x <- runDB (get uid)
     return (Left <$> x)
