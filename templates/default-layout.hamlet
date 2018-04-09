@@ -1,5 +1,7 @@
 <div .pageContainer>
     <div .header>
+        <h2>
+            Wedding of Toby and Jennifer 
         <ul .navbar>
             <li .pagelink>
                 <a href="@{InviteR}">
@@ -10,8 +12,6 @@
             <li .pagelink>
                 <a href="@{InfoR}">
                     Information
-        <h2>
-            Wedding of Toby and Jennifer 
         <hr .section-divider>
     <div .pageContent>
             ^{widget}
