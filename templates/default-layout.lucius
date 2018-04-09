@@ -16,6 +16,7 @@
     flex-wrap:wrap;
     justify-content: space-around;
     padding:0px;
+    min-width: 100%;
 }
 .pagelink{
     list-style:none;
