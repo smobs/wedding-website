@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 508af86c0570c330eefc476236f96035c58c39e98a74561e05550d6951c974fb
+-- hash: 4a5fe81e09b1b195037ff633cb8c1975a593e70ec6eff78492828b8e5b2140a2
 
 name:           wedding-website
 version:        0.0.0
@@ -71,7 +71,6 @@ library
       Application
       Foundation
       Handler.Common
-      Handler.Home
       Handler.Invite
       Import
       Import.NoFoundation

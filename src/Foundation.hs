@@ -116,13 +116,7 @@ instance Yesod App
     (title, parents) <- breadcrumbs
         -- Define the menu items of the header.
     let menuItems =
-          [ NavbarLeft $
-            MenuItem
-            { menuItemLabel = "Home"
-            , menuItemRoute = HomeR
-            , menuItemAccessCallback = True
-            }
-          , NavbarRight $
+          [ NavbarRight $
             MenuItem
             { menuItemLabel = "Login"
             , menuItemRoute = AuthR LoginR
@@ -152,7 +146,6 @@ instance Yesod App
   authRoute _ = Just $ AuthR LoginR
     -- Routes not requiring authentication.
   isAuthorized (AuthR _) _ = return Authorized
-  isAuthorized HomeR _ = return Authorized
   isAuthorized FaviconR _ = return Authorized
   isAuthorized RobotsR _ = return Authorized
   isAuthorized (StaticR _) _ = return Authorized
@@ -186,8 +179,6 @@ instance Yesod App
 
 -- Define breadcrumbs.
 instance YesodBreadcrumbs App where
-  breadcrumb HomeR = return ("Home", Nothing)
-  breadcrumb (AuthR _) = return ("Login", Just HomeR)
   breadcrumb _ = return ("home", Nothing)
 
 -- How to run database actions.
@@ -220,9 +211,9 @@ instance PathPiece (Either GuestId Text) where
 instance YesodAuth App where
   type AuthId App = Either GuestId Text
     -- Where to send a user after successful login
-  loginDest _ = HomeR
+  loginDest _ = InviteR
     -- Where to send a user after logout
-  logoutDest _ = HomeR
+  logoutDest _ = InviteR
     -- Override the above two destinations when a Referer: header is present
   redirectToReferer _ = True
   authenticate Creds {..} =
