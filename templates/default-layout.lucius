@@ -4,7 +4,7 @@
     min-height: 80vh;
     min-width: 70vw;
 }
-.pageContent {
+.pageContent , .header {
     display:flex;
     justify-content: space-around;
     align-items: center;
@@ -55,7 +55,8 @@ a {
     padding-left:3px;
     padding-right:3px;
 }
-
+.section-divider { 
+} 
 a:hover{
     background-color:#993399;
     color:white;

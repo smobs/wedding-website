@@ -10,6 +10,8 @@
             <li .pagelink>
                 <a href="@{InfoR}">
                     Information
-                
+        <h2>
+            Wedding of Toby and Jennifer 
+        <hr .section-divider>
     <div .pageContent>
             ^{widget}
