@@ -7,6 +7,6 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/invite InviteR GET
-/invite/rsvp RsvpR GET POST
-/invite/information InfoR GET
+/ InviteR GET
+/rsvp RsvpR GET POST
+/information InfoR GET
