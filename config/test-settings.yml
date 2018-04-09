@@ -1,11 +1,3 @@
-database:
-  # NOTE: By design, this setting prevents the SQLITE_DATABASE environment variable
-  # from affecting test runs, so that we don't accidentally affect the
-  # production database during testing. If you're not concerned about that and
-  # would like to have environment variable overrides, you could instead use
-  # something like:
-  #
-  #   database: "_env:SQLITE_DATABASE:wedding-website_test.sqlite3"
-  database: wedding-website_test.sqlite3
-
+database-conn: "host=localhost dbname=postgres user=postgres password=mysecretpassword port=4321"
+database-pool-size: 10
 auth-dummy-login: true

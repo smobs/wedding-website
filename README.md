@@ -41,3 +41,7 @@ stack test --flag wedding-website:library-only --flag wedding-website:dev
 * There are several chatrooms you can ask for help:
 	* For IRC, try Freenode#yesod and Freenode#haskell
 	* [Functional Programming Slack](https://fpchat-invite.herokuapp.com/), in the #haskell, #haskell-beginners, or #yesod channels.
+
+## Postgres
+
+`docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres -p 5432:4321`

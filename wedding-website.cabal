@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6262a434ca7d6bd3b08a4fe5dbaa866aa17c67b5bcb41388d1068bddb9e1e1a3
+-- hash: 508af86c0570c330eefc476236f96035c58c39e98a74561e05550d6951c974fb
 
 name:           wedding-website
 version:        0.0.0
@@ -42,6 +42,7 @@ library
     , monad-control >=0.3 && <1.1
     , monad-logger >=0.3 && <0.4
     , persistent >=2.0 && <2.8
+    , persistent-postgresql
     , persistent-sqlite >=2.6.2 && <2.8
     , persistent-template >=2.0 && <2.8
     , safe
@@ -106,6 +107,7 @@ executable wedding-website
     , monad-control >=0.3 && <1.1
     , monad-logger >=0.3 && <0.4
     , persistent >=2.0 && <2.8
+    , persistent-postgresql
     , persistent-sqlite >=2.6.2 && <2.8
     , persistent-template >=2.0 && <2.8
     , safe
@@ -161,6 +163,7 @@ test-suite test
     , monad-control >=0.3 && <1.1
     , monad-logger >=0.3 && <0.4
     , persistent >=2.0 && <2.8
+    , persistent-postgresql
     , persistent-sqlite >=2.6.2 && <2.8
     , persistent-template >=2.0 && <2.8
     , safe

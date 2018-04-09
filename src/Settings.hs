@@ -16,21 +16,24 @@ import Data.Aeson                  (Result (..), fromJSON, withObject, (.!=),
                                     (.:?))
 import Data.FileEmbed              (embedFile)
 import Data.Yaml                   (decodeEither')
-import Database.Persist.Sqlite     (SqliteConf)
 import Language.Haskell.TH.Syntax  (Exp, Name, Q)
 import Network.Wai.Handler.Warp    (HostPreference)
 import Yesod.Default.Config2       (applyEnvValue, configSettingsYml)
 import Yesod.Default.Util          (WidgetFileSettings, widgetFileNoReload,
                                     widgetFileReload)
-
+import Database.Persist.Postgresql
+import qualified Data.ByteString.Char8 as B 
+data DatabaseSettings = DatabaseSettings {
+    databaseConnectionString :: ConnectionString,
+    databasePoolSize :: Int
+}
 -- | Runtime settings to configure this application. These settings can be
 -- loaded from various sources: defaults, environment variables, config files,
 -- theoretically even a database.
 data AppSettings = AppSettings
     { appStaticDir              :: String
     -- ^ Directory from which to serve static files.
-    , appDatabaseConf           :: SqliteConf
-    -- ^ Configuration settings for accessing the database.
+    , appDatabaseSettings :: DatabaseSettings
     , appRoot                   :: Maybe Text
     -- ^ Base for all generated URLs. If @Nothing@, determined
     -- from the request headers.
@@ -72,7 +75,7 @@ instance FromJSON AppSettings where
                 False
 #endif
         appStaticDir              <- o .: "static-dir"
-        appDatabaseConf           <- o .: "database"
+        appDatabaseSettings       <- (DatabaseSettings . B.pack) <$> o .: "database-conn"  <*>  o .: "database-pool-size"
         appRoot                   <- o .:? "approot"
         appHost                   <- fromString <$> o .: "host"
         appPort                   <- o .: "port"
@@ -90,7 +93,6 @@ instance FromJSON AppSettings where
         appAnalytics              <- o .:? "analytics"
 
         appAuthDummyLogin         <- o .:? "auth-dummy-login"      .!= dev
-
         return AppSettings {..}
 
 -- | Settings for 'widgetFile', such as which template languages to support and
