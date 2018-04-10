@@ -49,7 +49,6 @@ authGuestList = AuthPlugin "guestlist" dispatch loginWidget
               <form method="post" action="@{toMaster loginR}">
                 $maybe t <- reqToken request
                   <input type=hidden name=#{defaultCsrfParamName} value=#{t}>
-                
                 <table>
                   <tr>
                     <th>First name

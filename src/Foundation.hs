@@ -23,7 +23,7 @@ import qualified Data.CaseInsensitive as CI
 import qualified Data.Text.Encoding as TE
 import Text.Read (readMaybe)
 import Yesod.Auth.GuestList
-import Yesod.Auth.Hardcoded
+import Yesod.Auth.SecretHardcoded
 import Yesod.Auth.Message
 import Yesod.Auth.OpenId (IdentifierType(Claimed), authOpenId)
 import Yesod.Core.Types (Logger)
@@ -153,6 +153,7 @@ instance Yesod App
   isAuthorized InviteR _ = return Authorized
   isAuthorized InfoR _ = return Authorized
   isAuthorized RsvpR _ = return Authorized
+  isAuthorized AdminLoginR _ = return Authorized
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
     -- expiration dates to be set far in the future without worry of
@@ -227,7 +228,7 @@ instance YesodAuth App where
   redirectToReferer _ = True
   authenticate Creds {..} =
     (case credsPlugin of
-       "hardcoded" ->
+       "secrethardcoded" ->
          return $
          case lookupUser credsIdent of
            Nothing -> UserError InvalidLogin
@@ -243,7 +244,7 @@ instance YesodAuth App where
         -- Enable authDummy login if enabled.
     where
       extraAuthPlugins =
-        [authGuestList] ++ [authHardcoded]
+        [authGuestList] ++ [authSecretHardcoded]
   authHttpManager = getHttpManager
 
 -- | Access function to determine if a user is logged in.

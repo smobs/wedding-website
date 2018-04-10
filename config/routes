@@ -10,3 +10,5 @@
 / InviteR GET
 /rsvp RsvpR GET POST
 /information InfoR GET
+
+/admin/login AdminLoginR GET
