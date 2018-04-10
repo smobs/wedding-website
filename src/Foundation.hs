@@ -22,6 +22,7 @@ import Yesod.Auth.Dummy
 import qualified Data.CaseInsensitive as CI
 import qualified Data.Text.Encoding as TE
 import Text.Read (readMaybe)
+import Yesod.Auth.GuestList
 import Yesod.Auth.Hardcoded
 import Yesod.Auth.Message
 import Yesod.Auth.OpenId (IdentifierType(Claimed), authOpenId)
@@ -195,6 +196,14 @@ instance YesodAuthHardcoded App where
   validatePassword u = return . validPassword u
   doesUserNameExist = return . isJust . lookupUser
 
+instance YesodGuestList App where
+  isGuestOnList firstname lastname = do
+    x <- lift $ runDB $ getBy $ UniqueGuest $ (mappend firstname lastname)
+    pure $
+      case x of
+        Just (Entity _ g) -> Right (guestIdent g)
+        _ -> Left []
+
 validPassword :: Text -> Text -> Bool
 validPassword u p =
   case find (\m -> manUserName m == u && manPassWord m == p) siteManagers of
@@ -223,20 +232,18 @@ instance YesodAuth App where
          case lookupUser credsIdent of
            Nothing -> UserError InvalidLogin
            Just m -> Authenticated (Right (manUserName m))
-       _ ->
+       "guestlist" ->
          runDB $ do
            x <- getBy $ UniqueGuest $ credsIdent
            case x of
              Just (Entity uid _) -> return $ (Authenticated . Left) uid
-             Nothing ->
-               (Authenticated . Left) <$>
-               insert Guest {guestIdent = credsIdent})
+             Nothing -> return $ UserError InvalidLogin)
   -- You can add other plugins like Google Email, email or OAuth here
   authPlugins app = extraAuthPlugins
         -- Enable authDummy login if enabled.
     where
       extraAuthPlugins =
-        [authDummy | appAuthDummyLogin $ appSettings app] ++ [authHardcoded]
+        [authGuestList] ++ [authHardcoded]
   authHttpManager = getHttpManager
 
 -- | Access function to determine if a user is logged in.
