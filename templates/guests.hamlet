@@ -1,0 +1,12 @@
+<table>
+    <tr>
+      <th>
+        Guest name
+      <th>
+    $forall Entity g (Guest _ first last) <- guests 
+        <tr>
+          <td> 
+            #{first} #{last}
+          <td>
+            <a href=@{GuestR g}>
+                Edit

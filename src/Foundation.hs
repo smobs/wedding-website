@@ -154,6 +154,9 @@ instance Yesod App
   isAuthorized InfoR _ = return Authorized
   isAuthorized RsvpR _ = return Authorized
   isAuthorized AdminLoginR _ = return Authorized
+  isAuthorized (GuestR _) _ = isAdmin
+  isAuthorized GuestsR _ = isAdmin
+  
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
     -- expiration dates to be set far in the future without worry of
@@ -255,6 +258,13 @@ isAuthenticated = do
     case muid of
       Nothing -> Unauthorized "You must login to access this page"
       Just _ -> Authorized
+isAdmin :: Handler AuthResult
+isAdmin = do
+  muid <- maybeAuthId
+  return $
+    case muid of 
+      Just (Right _) -> Authorized
+      _ -> Unauthorized "You must login as admin to access this page"
 
 instance YesodAuthPersist App where
   type AuthEntity App = Either Guest SiteManager
