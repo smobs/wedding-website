@@ -19,11 +19,15 @@ Comment json -- Adding "json" causes ToJSON and FromJSON instances to be derived
 
 Guest
     ident Text
+    firstName Text
+    lastName Text
     UniqueGuest ident
+    UniqueGuestName firstName lastName
 
 Household
-    members [GuestId]
-    UniqueHousehold members
+    left GuestId
+    right GuestId
+    UniqueHousehold left right
 
 GuestRsvp
     guestId GuestId

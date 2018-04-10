@@ -199,7 +199,7 @@ instance YesodAuthHardcoded App where
 
 instance YesodGuestList App where
   isGuestOnList firstname lastname = do
-    x <- lift $ runDB $ getBy $ UniqueGuest $ (mappend firstname lastname)
+    x <- lift $ runDB $ getBy $ UniqueGuestName firstname lastname
     pure $
       case x of
         Just (Entity _ g) -> Right (guestIdent g)
