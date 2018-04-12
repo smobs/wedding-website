@@ -14,4 +14,4 @@
                     Information
         <hr .section-divider>
     <div .pageContent>
-            ^{widget}
+        ^{widget}

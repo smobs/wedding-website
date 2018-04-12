@@ -1,4 +1,4 @@
 <form method=post action=@{RsvpR} enctype=#{formEnctype}>
-        ^{formWidget}
+    ^{formWidget}
     <button type="submit" class="btn-rsvp">
-                            RSVP
+        RSVP
