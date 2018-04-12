@@ -3,7 +3,7 @@
       <th>
         Guest name
       <th>
-    $forall Entity g (Guest _ first last) <- guests 
+    $forall Entity g (Guest _ first last _) <- guests 
         <tr>
           <td> 
             #{first} #{last}

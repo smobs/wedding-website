@@ -6,13 +6,10 @@ Guest
     ident Text
     firstName Text
     lastName Text
+    household Int
     UniqueGuest ident
     UniqueGuestName firstName lastName
-
-Household
-    left GuestId
-    right GuestId
-    UniqueHousehold left right
+    deriving Show
 
 GuestRsvp
     guestId GuestId
