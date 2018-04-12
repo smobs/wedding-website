@@ -6,7 +6,7 @@ Guest
     ident Text
     firstName Text
     lastName Text
-    household Int
+    party Int
     UniqueGuest ident
     UniqueGuestName firstName lastName
     deriving Show

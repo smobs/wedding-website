@@ -29,6 +29,7 @@ import Yesod.Auth.OpenId (IdentifierType(Claimed), authOpenId)
 import Yesod.Core.Types (Logger)
 import qualified Yesod.Core.Unsafe as Unsafe
 import Yesod.Default.Util (addStaticContentExternal)
+import qualified Data.Guest as Guest
 
 -- | The foundation datatype for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -202,7 +203,7 @@ instance YesodAuthHardcoded App where
 
 instance YesodGuestList App where
   isGuestOnList firstname lastname = do
-    x <- lift $ runDB $ getBy $ UniqueGuestName firstname lastname
+    x <- lift $ runDB $ getBy $ UniqueGuestName (Guest.makeConsistent firstname) (Guest.makeConsistent lastname)
     pure $
       case x of
         Just (Entity _ g) -> Right (guestIdent g)

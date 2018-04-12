@@ -22,7 +22,7 @@ decodeGuests b =
 
 decodeGuests' ::
      BL.ByteString
-  -> Either String (Vector (GuestUserName, FirstName, LastName, Household))
+  -> Either String (Vector (GuestUserName, FirstName, LastName, Party))
 decodeGuests' b = decode NoHeader b
 
 connStr =
