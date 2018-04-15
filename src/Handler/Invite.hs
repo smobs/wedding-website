@@ -21,7 +21,7 @@ getTravelR = do
 getOnTheDayR :: Handler Html
 getOnTheDayR = do
   defaultLayout $(widgetFile "on-the-day")
-  
+
 getAccommodationR :: Handler Html
 getAccommodationR = do
   defaultLayout $(widgetFile "accommodation")
@@ -29,40 +29,32 @@ getAccommodationR = do
 
 getRsvpR :: Handler Html
 getRsvpR = do
-  mguest <- getGuestId
-  case mguest of
-    Just guest -> do
-      party <- wholePartyRsvp guest
-      (formWidget, formEnctype) <- generateFormPost $ guestRsvpForm party
-      defaultLayout $(widgetFile "rsvp")
-    Nothing -> defaultLayout $(widgetFile "invite")
+  guest <- getGuestId
+  party <- wholePartyRsvp guest
+  (formWidget, formEnctype) <- generateFormPost $ guestRsvpForm party
+  defaultLayout $(widgetFile "rsvp")
 
 postRsvpR :: Handler Html
 postRsvpR = do
-  mguest <- getGuestId
-  case mguest of
-    Just guest -> do
-      party <- wholePartyRsvp guest
-      ((res, widget), enctype) <- runFormPost $ guestRsvpForm party
-      case res of
-        FormSuccess gs -> do
-          runDB $ do
-            traverse_ updateRsvp gs
-        _ -> pure ()
-      defaultLayout $(widgetFile "invite")
-    _ -> defaultLayout $(widgetFile "invite")
+  guest <- getGuestId
+  party <- wholePartyRsvp guest
+  ((res, widget), enctype) <- runFormPost $ guestRsvpForm party
+  case res of
+    FormSuccess gs -> do
+      runDB $ do
+        traverse_ updateRsvp gs
+    _ -> pure ()
+  defaultLayout $(widgetFile "invite")
   
 updateRsvp :: GuestRsvp -> DB ()
 updateRsvp g@(GuestRsvp gid _ _ _) = do 
   deleteBy (UniqueRsvp gid)
   insert_ g
 
-getGuestId :: Handler (Maybe GuestId)
+getGuestId :: Handler (GuestId)
 getGuestId = do
   (egid, _) <- requireAuthPair
-  case egid of
-    Left gid -> pure $ Just gid
-    _ -> return Nothing
+  pure egid
 
 defaultRsvp gid = GuestRsvp gid True Nothing False
 yesNo = radioFieldList [("Yes" :: Text, True), ("No" :: Text, False)]

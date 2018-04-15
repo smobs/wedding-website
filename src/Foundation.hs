@@ -23,7 +23,6 @@ import qualified Data.CaseInsensitive as CI
 import qualified Data.Text.Encoding as TE
 import Text.Read (readMaybe)
 import Yesod.Auth.GuestList
-import Yesod.Auth.SecretHardcoded
 import Yesod.Auth.Message
 import Yesod.Auth.OpenId (IdentifierType(Claimed), authOpenId)
 import Yesod.Core.Types (Logger)
@@ -52,14 +51,6 @@ data MenuItem = MenuItem
 data MenuTypes
   = NavbarLeft MenuItem
   | NavbarRight MenuItem
-
-data SiteManager = SiteManager
-  { manUserName :: Text
-  , manPassWord :: Text
-  } deriving (Show)
-
-siteManagers :: [SiteManager]
-siteManagers = [SiteManager "content editor" "top secret"]
 
 -- This is where we define all of the routes in our application. For a full
 -- explanation of the syntax, please see:
@@ -157,9 +148,6 @@ instance Yesod App
   isAuthorized AccommodationR _ = return Authorized
   isAuthorized InfoR _ = return Authorized
   isAuthorized RsvpR _ = return Authorized
-  isAuthorized AdminLoginR _ = return Authorized
-  isAuthorized (GuestR _) _ = isAdmin
-  isAuthorized GuestsR _ = isAdmin
   
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
@@ -200,10 +188,6 @@ instance YesodPersist App where
 instance YesodPersistRunner App where
   getDBRunner = defaultGetDBRunner appConnPool
 
-instance YesodAuthHardcoded App where
-  validatePassword u = return . validPassword u
-  doesUserNameExist = return . isJust . lookupUser
-
 instance YesodGuestList App where
   isGuestOnList firstname lastname = do
     x <- lift $ runDB $ getBy $ UniqueGuestName (Guest.makeConsistent firstname) (Guest.makeConsistent lastname)
@@ -212,21 +196,9 @@ instance YesodGuestList App where
         Just (Entity _ g) -> Right (guestIdent g)
         _ -> Left []
 
-validPassword :: Text -> Text -> Bool
-validPassword u p =
-  case find (\m -> manUserName m == u && manPassWord m == p) siteManagers of
-    Just _ -> True
-    _ -> False
-
-lookupUser :: Text -> Maybe SiteManager
-lookupUser username = find (\m -> manUserName m == username) siteManagers
-
-instance PathPiece (Either GuestId Text) where
-  fromPathPiece = readMaybe . unpack
-  toPathPiece = pack . show
 
 instance YesodAuth App where
-  type AuthId App = Either GuestId Text
+  type AuthId App = GuestId
     -- Where to send a user after successful login
   loginDest _ = InviteR
     -- Where to send a user after logout
@@ -235,23 +207,18 @@ instance YesodAuth App where
   redirectToReferer _ = True
   authenticate Creds {..} =
     (case credsPlugin of
-       "secrethardcoded" ->
-         return $
-         case lookupUser credsIdent of
-           Nothing -> UserError InvalidLogin
-           Just m -> Authenticated (Right (manUserName m))
        "guestlist" ->
          runDB $ do
            x <- getBy $ UniqueGuest $ credsIdent
            case x of
-             Just (Entity uid _) -> return $ (Authenticated . Left) uid
+             Just (Entity uid _) -> return $ (Authenticated) uid
              Nothing -> return $ UserError InvalidLogin)
   -- You can add other plugins like Google Email, email or OAuth here
   authPlugins app = extraAuthPlugins
         -- Enable authDummy login if enabled.
     where
       extraAuthPlugins =
-        [authGuestList] ++ [authSecretHardcoded]
+        [authGuestList]
   authHttpManager = getHttpManager
 
 -- | Access function to determine if a user is logged in.
@@ -262,20 +229,12 @@ isAuthenticated = do
     case muid of
       Nothing -> Unauthorized "You must login to access this page"
       Just _ -> Authorized
-isAdmin :: Handler AuthResult
-isAdmin = do
-  muid <- maybeAuthId
-  return $
-    case muid of 
-      Just (Right _) -> Authorized
-      _ -> Unauthorized "You must login as admin to access this page"
 
 instance YesodAuthPersist App where
-  type AuthEntity App = Either Guest SiteManager
-  getAuthEntity (Left uid) = do
+  type AuthEntity App = Guest
+  getAuthEntity uid = do
     x <- runDB (get uid)
-    return (Left <$> x)
-  getAuthEntity (Right username) = return (Right <$> lookupUser username)
+    return x
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.

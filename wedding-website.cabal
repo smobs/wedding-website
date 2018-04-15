@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fd89d7e161434f549467a8f4b2cb1277e9afe7d0007b26b1b31c0c2522dea5f6
+-- hash: 624551353edb9c534f8509f0e24210ae66ec57658948d5650dc36295a1a55a80
 
 name:           wedding-website
 version:        0.0.0
@@ -72,7 +72,6 @@ library
       Application
       Data.Guest
       Foundation
-      Handler.Admin
       Handler.Common
       Handler.Invite
       Import
@@ -81,7 +80,6 @@ library
       Settings
       Settings.StaticFiles
       Yesod.Auth.GuestList
-      Yesod.Auth.SecretHardcoded
   other-modules:
       Paths_wedding_website
   default-language: Haskell2010

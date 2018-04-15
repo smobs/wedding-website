@@ -13,7 +13,3 @@
 /travel TravelR GET
 /ontheday OnTheDayR GET
 /accommodation AccommodationR GET
-
-/admin/login AdminLoginR GET
-/admin/guests GuestsR GET
-/admin/guests/#GuestId GuestR GET POST
