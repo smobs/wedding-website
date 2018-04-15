@@ -11,7 +11,7 @@ import Import
 
 main :: IO ()
 main = do
-  let egs = decodeGuests "TobySmyth ,Toby,Smyth,0"
+  let egs = decodeGuests "TobySmyth ,Toby,Smyth,0\r\nJenniferEllis,Jennifer,Ellis,0"
   case egs of
     Left er -> putStrLn (pack er)
     Right gs -> updateGuests gs
