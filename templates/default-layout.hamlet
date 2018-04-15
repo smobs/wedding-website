@@ -12,6 +12,12 @@
             <li .pagelink>
                 <a href="@{InfoR}">
                     Information
+            <li .pagelink>
+                <a href="@{TravelR}">
+                    Getting There
+            <li .pagelink>
+                <a href="@{OnTheDayR}">
+                    On the day
         <hr .section-divider>
     <div .pageContent>
         ^{widget}

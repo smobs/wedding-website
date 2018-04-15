@@ -10,6 +10,8 @@
 / InviteR GET
 /rsvp RsvpR GET POST
 /information InfoR GET
+/travel TravelR GET
+/ontheday OnTheDayR GET
 
 /admin/login AdminLoginR GET
 /admin/guests GuestsR GET

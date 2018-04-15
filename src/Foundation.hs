@@ -152,6 +152,8 @@ instance Yesod App
   isAuthorized RobotsR _ = return Authorized
   isAuthorized (StaticR _) _ = return Authorized
   isAuthorized InviteR _ = return Authorized
+  isAuthorized OnTheDayR _ = return Authorized
+  isAuthorized TravelR _ = return Authorized
   isAuthorized InfoR _ = return Authorized
   isAuthorized RsvpR _ = return Authorized
   isAuthorized AdminLoginR _ = return Authorized

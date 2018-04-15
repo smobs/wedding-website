@@ -22,6 +22,7 @@
     list-style:none;
     margin-left:10px;
     margin-right:10px;
+    text-transform: uppercase;
 }
 body {
     background-image: url("@{StaticR zigzag_svg}");
@@ -46,11 +47,12 @@ html {
   box-sizing: border-box; 
   font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif;
 }
-h1,h2,h3,h4,p,a {
+h1,h2,h3,h4 {
     text-transform: uppercase;
     font-weight: normal;
 }
 a {
+    font-weight: normal;
     text-decoration: none;
     color:#993399;
     padding-left:3px;

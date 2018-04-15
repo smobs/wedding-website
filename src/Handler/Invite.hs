@@ -14,6 +14,15 @@ getInfoR :: Handler Html
 getInfoR = do
   defaultLayout $(widgetFile "info")
 
+getTravelR :: Handler Html
+getTravelR = do
+  defaultLayout $(widgetFile "getting-there")
+
+getOnTheDayR :: Handler Html
+getOnTheDayR = do
+  defaultLayout $(widgetFile "on-the-day")
+
+
 getRsvpR :: Handler Html
 getRsvpR = do
   mguest <- getGuestId
