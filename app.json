@@ -1,0 +1,20 @@
+{
+  "name": "wedding-website",
+  "scripts": {
+  },
+  "env": {
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/mfine/heroku-buildpack-stack.git"
+    }
+  ]
+}
