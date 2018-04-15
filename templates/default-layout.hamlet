@@ -14,7 +14,10 @@
                     Information
             <li .pagelink>
                 <a href="@{TravelR}">
-                    Getting There
+                    Travel
+            <li .pagelink>
+                <a href="@{AccommodationR}">
+                    Accommodation
             <li .pagelink>
                 <a href="@{OnTheDayR}">
                     On the day

@@ -154,6 +154,7 @@ instance Yesod App
   isAuthorized InviteR _ = return Authorized
   isAuthorized OnTheDayR _ = return Authorized
   isAuthorized TravelR _ = return Authorized
+  isAuthorized AccommodationR _ = return Authorized
   isAuthorized InfoR _ = return Authorized
   isAuthorized RsvpR _ = return Authorized
   isAuthorized AdminLoginR _ = return Authorized

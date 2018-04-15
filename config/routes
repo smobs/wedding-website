@@ -12,6 +12,7 @@
 /information InfoR GET
 /travel TravelR GET
 /ontheday OnTheDayR GET
+/accommodation AccommodationR GET
 
 /admin/login AdminLoginR GET
 /admin/guests GuestsR GET

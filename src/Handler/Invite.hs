@@ -21,6 +21,10 @@ getTravelR = do
 getOnTheDayR :: Handler Html
 getOnTheDayR = do
   defaultLayout $(widgetFile "on-the-day")
+  
+getAccommodationR :: Handler Html
+getAccommodationR = do
+  defaultLayout $(widgetFile "accommodation")
 
 
 getRsvpR :: Handler Html
