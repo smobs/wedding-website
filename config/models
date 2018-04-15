@@ -17,5 +17,6 @@ GuestRsvp
     dietaryRequirements Text Maybe
     needsTheBus Bool
     UniqueRsvp guestId
+    deriving Show
 
 

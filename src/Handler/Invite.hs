@@ -5,7 +5,7 @@
 module Handler.Invite where
 
 import Import
-
+import Data.Guest
 getInviteR :: Handler Html
 getInviteR = do
   defaultLayout $(widgetFile "invite")
@@ -33,7 +33,7 @@ postRsvpR = do
       ((res, widget), enctype) <- runFormPost $ guestRsvpForm party
       case res of
         FormSuccess gs -> do
-          runDB $ do 
+          runDB $ do
             traverse_ updateRsvp gs
         _ -> pure ()
       defaultLayout $(widgetFile "invite")
@@ -83,8 +83,17 @@ guestRsvpForm gs = do
 wholePartyRsvp :: GuestId -> Handler [GuestRsvp]
 wholePartyRsvp gid = runDB $ do
   gs <- wholeParty' gid
-  rsvps <-  traverse (getBy . UniqueRsvp) gs
-  pure $ (maybe (defaultRsvp gid) (\(Entity _ rsvp) -> rsvp)) <$> rsvps
+  rsvps <- traverse (\i -> (maybe (defaultRsvp i) (\(Entity _ rsvp) -> rsvp)) <$>  (getBy $ UniqueRsvp i)) gs
+  pure  rsvps
 
 wholeParty' :: GuestId -> DB [GuestId]
-wholeParty' g = pure [g]
+wholeParty' g = do
+    mpid <- get g  
+    case mpid of 
+      Just (Guest _ _ _ partyId) -> do 
+          eguests <- lookupParty partyId
+          pure $ (\(Entity k _) -> k) <$> eguests
+      _ -> pure [g]
+
+lookupParty :: Party -> DB [Entity Guest]
+lookupParty partyId = selectList [GuestParty ==. partyId] []
