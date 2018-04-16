@@ -1,5 +1,5 @@
 {-# LANGUAGE NoImplicitPrelude #-}
-
+{-# LANGUAGE OverloadedStrings #-}
 module Data.Guest
   ( createGuest
   , FirstName
@@ -22,7 +22,7 @@ type GuestUserName = Text
 type Party = Int
 
 prettyName :: Guest -> Text
-prettyName (Guest _ f l _) = (toTitle f) <> (toTitle l)
+prettyName (Guest _ f l _) = (toTitle f) <> " " <> (toTitle l)
 
 createGuest :: GuestUserName -> FirstName -> LastName -> Party -> Guest
 createGuest u f l h =

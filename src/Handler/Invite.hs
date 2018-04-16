@@ -118,12 +118,23 @@ rsvpMForm' (guest, GuestRsvp gid coming diet bus) extra = do
   (comingRes, comingView) <- comingW
   (dietRes, dietView) <- dietW
   (busRes, busView) <- busW
+  let name = prettyName guest
   let widget =
         [whamlet|
       #{extra}
-      ^{fvInput comingView}
-      ^{fvInput busView}
-      ^{fvInput dietView}
+      <h4> #{name}
+      <div>
+        <label> 
+          Are you able to attend?
+        ^{fvInput comingView}
+      <div> 
+        <label>
+          Will you need transport between the reception and the venue?
+        ^{fvInput busView}
+      <div>
+        <label>
+          Do you have any dietary requirements?
+        ^{fvInput dietView}
     |]
   let guestRes =
         (,) guest <$> (GuestRsvp gid <$> comingRes <*> dietRes <*> busRes)
