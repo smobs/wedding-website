@@ -1,7 +1,7 @@
 <div .pageContainer>
     <div .header>
         <h2>
-            Wedding of Toby and Jennifer 
+            Wedding of <span class="splash">Toby</span> and <span class="splash">Jennifer</span> 
         <ul .navbar>
             <li .pagelink>
                 <a href="@{InviteR}">
