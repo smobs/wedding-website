@@ -91,6 +91,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - wedding-website
+    - optparse-applicative
     when:
     - condition: flag(library-only)
       buildable: false

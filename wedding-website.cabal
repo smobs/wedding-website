@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 624551353edb9c534f8509f0e24210ae66ec57658948d5650dc36295a1a55a80
+-- hash: f6a0b270ce17721165e3e742ec4cda4f191337c989840ff7858b92d4ea195d27
 
 name:           wedding-website
 version:        0.0.0
@@ -109,6 +109,7 @@ executable guest-updater
     , http-conduit >=2.1 && <2.3
     , monad-control >=0.3 && <1.1
     , monad-logger >=0.3 && <0.4
+    , optparse-applicative
     , persistent >=2.0 && <2.8
     , persistent-postgresql
     , persistent-sqlite >=2.6.2 && <2.8

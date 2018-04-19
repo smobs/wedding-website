@@ -8,13 +8,51 @@ import Data.Guest
 import Database.Persist
 import Database.Persist.Postgresql
 import Import
+import Options.Applicative as O
+
+data Inputs = Inputs
+  { uploadFile :: Maybe String
+  , downloadLocation :: Maybe String
+  , databaseConnection :: ConnectionString
+  }
 
 main :: IO ()
 main = do
-  let egs = decodeGuests "TobySmyth ,Toby,Smyth,0\r\nJenniferEllis,Jennifer,Ellis,0"
+  options <- execParser opts
+  let conn = databaseConnection options
+  case uploadFile options of
+    Nothing -> pure ()
+    Just _ -> pure ()
+  case downloadLocation options of
+    Nothing -> pure ()
+    Just _ -> pure ()
+   
+  let egs =
+        decodeGuests "TobySmyth ,Toby,Smyth,0\r\nJenniferEllis,Jennifer,Ellis,0"
   case egs of
     Left er -> putStrLn (pack er)
     Right gs -> updateGuests gs
+
+opts :: O.ParserInfo Inputs
+opts =
+  info
+    (inputs <**> helper)
+    (fullDesc <> progDesc "Link data between spreadsheet and database" <>
+     O.header "guest updater")
+
+inputs :: O.Parser Inputs
+inputs =
+  Inputs <$>
+  option
+    auto
+    (long "uploadGuestlist" <> short 'u' <> metavar "GUESTLISTFILE" <>
+     value Nothing) <*>
+  option
+    auto
+    (long "downloadRSVP" <> short 'd' <> metavar "RSVPFILE" <> value Nothing) <*>
+  option
+    auto
+    (long "connection" <> short 'c' <> metavar "CONNECTION" <> value connStr)
 
 decodeGuests :: BL.ByteString -> Either String (Vector Guest)
 decodeGuests b =
