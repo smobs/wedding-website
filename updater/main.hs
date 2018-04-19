@@ -10,9 +10,12 @@ import Database.Persist.Postgresql
 import Import
 import Options.Applicative as O
 
+data Command
+  = Upload String
+  | Download String
+
 data Inputs = Inputs
-  { uploadFile :: Maybe String
-  , downloadLocation :: Maybe String
+  { inputCommand :: Command
   , databaseConnection :: ConnectionString
   }
 
@@ -20,18 +23,14 @@ main :: IO ()
 main = do
   options <- execParser opts
   let conn = databaseConnection options
-  case uploadFile options of
-    Nothing -> pure ()
-    Just _ -> pure ()
-  case downloadLocation options of
-    Nothing -> pure ()
-    Just _ -> pure ()
-   
-  let egs =
-        decodeGuests "TobySmyth ,Toby,Smyth,0\r\nJenniferEllis,Jennifer,Ellis,0"
-  case egs of
-    Left er -> putStrLn (pack er)
-    Right gs -> updateGuests gs
+  case inputCommand options of
+    Download fileName -> pure ()
+    Upload fileName -> do
+      csvcontents <- BL.readFile fileName
+      let egs = decodeGuests csvcontents
+      case egs of
+        Left er -> putStrLn (pack er)
+        Right gs -> updateGuests conn gs
 
 opts :: O.ParserInfo Inputs
 opts =
@@ -42,17 +41,22 @@ opts =
 
 inputs :: O.Parser Inputs
 inputs =
-  Inputs <$>
-  option
-    auto
-    (long "uploadGuestlist" <> short 'u' <> metavar "GUESTLISTFILE" <>
-     value Nothing) <*>
-  option
-    auto
-    (long "downloadRSVP" <> short 'd' <> metavar "RSVPFILE" <> value Nothing) <*>
-  option
-    auto
-    (long "connection" <> short 'c' <> metavar "CONNECTION" <> value connStr)
+  let cmd =
+        subparser
+          (command
+             "upload"
+             (info
+                (Upload <$> (strArgument (metavar "GUESTLISTFILE")))
+                (progDesc "Update the guest list")) <>
+           command
+             "download"
+             (info
+                (Download <$> (strArgument (metavar "TARGETFILE")))
+                (progDesc "Update the guest list")))
+  in Inputs <$> cmd <*>
+     option
+       auto
+       (long "connection" <> short 'c' <> metavar "CONNECTION" <> value connStr)
 
 decodeGuests :: BL.ByteString -> Either String (Vector Guest)
 decodeGuests b =
@@ -61,17 +65,17 @@ decodeGuests b =
 decodeGuests' ::
      BL.ByteString
   -> Either String (Vector (GuestUserName, FirstName, LastName, Party))
-decodeGuests' b = decode NoHeader b
+decodeGuests' b = decode HasHeader b
 
 connStr =
   "host=localhost dbname=postgres user=postgres password=mysecretpassword port=4321"
 
 type HandleDB m a = ReaderT SqlBackend m a
 
-updateGuests :: Vector Guest -> IO ()
-updateGuests gs = do
+updateGuests :: ConnectionString -> Vector Guest -> IO ()
+updateGuests conn gs = do
   runStderrLoggingT $
-    withPostgresqlPool connStr 10 $ \pool ->
+    withPostgresqlPool conn 10 $ \pool ->
       liftIO $ do
         flip runSqlPersistMPool pool $ do
           runMigration migrateAll
