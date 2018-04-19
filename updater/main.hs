@@ -30,6 +30,13 @@ instance ToNamedRecord NamedRsvp where
     where
       na :: Text
       na = "No reply"
+  toNamedRecord (MkNamedRsvp (n, Just (GuestRsvp _ c d b))) =
+    namedRecord
+      ["Name" .= n, "Coming" .= yesBool c, "Diet" .= d, "Bus" .= yesBool b]
+    where
+      yesBool :: Bool -> Text
+      yesBool True = "Yes"
+      yesBool False = "No"
 
 instance DefaultOrdered NamedRsvp where
   headerOrder _ = ["Name", "Coming", "Diet", "Bus"]
@@ -125,4 +132,14 @@ getRsvps :: ConnectionString -> IO [NamedRsvp]
 getRsvps conn = runDbCommand conn readRsvp
 
 readRsvp :: MonadIO m => HandleDB m [NamedRsvp]
-readRsvp = pure []
+readRsvp = do
+  eguests <- selectList [] []
+  traverse f eguests
+  where
+    f :: MonadIO m => Entity Guest -> HandleDB m NamedRsvp
+    f (Entity k g) = do
+      let name = prettyName g
+      rsvp <- getBy $ UniqueRsvp k
+      case rsvp of
+        Nothing -> pure $ MkNamedRsvp (name, Nothing)
+        Just (Entity _ r) -> pure $ MkNamedRsvp (name, Just r)
