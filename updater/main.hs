@@ -5,6 +5,7 @@
 import Control.Monad.Logger (runStderrLoggingT)
 import Control.Monad.Logger (NoLoggingT)
 import qualified Data.ByteString.Lazy as BL
+import qualified Data.ByteString.Char8 as BC
 import Data.Csv
 import Data.Guest
 import Database.Persist
@@ -71,9 +72,8 @@ inputs =
                 (Download <$> (strArgument (metavar "TARGETFILE")))
                 (progDesc "Update the guest list")))
   in Inputs <$> cmd <*>
-     option
-       auto
-       (long "connection" <> short 'c' <> metavar "CONNECTION" <> value connStr)
+     (BC.pack <$> strOption
+       (long "connection" <> short 'c' <> metavar "CONNECTION" <> value connStr))
 
 decodeGuests :: BL.ByteString -> Either String (Vector Guest)
 decodeGuests b =
