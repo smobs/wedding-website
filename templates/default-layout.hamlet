@@ -22,5 +22,9 @@
                 <a href="@{OnTheDayR}">
                     On the day
         <hr .section-divider>
+    $maybe msg <- mmsg
+        <div .messagePane>
+            <h5>
+                #{msg}
     <div .pageContent>
         ^{widget}

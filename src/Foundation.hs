@@ -191,12 +191,14 @@ instance YesodPersistRunner App where
 instance YesodGuestList App where
   isGuestOnList firstname lastname = do
     x <- lift $ runDB $ getBy $ UniqueGuestName (Guest.makeConsistent firstname) (Guest.makeConsistent lastname)
-    pure $
-      case x of
-        Just (Entity _ g) -> Right (guestIdent g)
-        _ -> Left []
+    case x of
+       Just (Entity _ g) -> pure $ Right (guestIdent g)
+       _ -> lift $ Left <$> (runDB $ closeMatch firstname lastname)
 
-
+closeMatch :: Text -> Text -> DB [(Text,Text)]
+closeMatch firstname lastname = do 
+    gs <- selectList ([GuestFirstName ==. firstname] ||. [GuestLastName ==. lastname]) [LimitTo 20]
+    pure $ (\(Entity _ (Guest _ f l _)) -> (f,l)) <$> gs
 instance YesodAuth App where
   type AuthId App = GuestId
     -- Where to send a user after successful login

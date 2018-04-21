@@ -12,6 +12,8 @@ module Yesod.Auth.GuestList
   , YesodGuestList(..)
   ) where
 
+import Control.Applicative ((<$>), (<*>))
+import Import.NoFoundation
 import Yesod.Auth
   ( AuthHandler
   , AuthPlugin(..)
@@ -25,16 +27,12 @@ import Yesod.Auth
 import qualified Yesod.Auth.Message as Msg
 import Yesod.Core
 import Yesod.Form (ireq, runInputPost, textField)
-
-import Control.Applicative ((<$>), (<*>))
-import Data.Text (Text)
+import Data.Text (toTitle)
 
 loginR :: AuthRoute
 loginR = PluginR "guestlist" ["login"]
 
-class YesodAuth site =>
-      YesodGuestList site
-  where
+class YesodAuth site => YesodGuestList site where
   isGuestOnList :: Text -> Text -> AuthHandler site (Either [(Text, Text)] Text)
 
 authGuestList :: YesodGuestList site => AuthPlugin site
@@ -60,7 +58,7 @@ authGuestList = AuthPlugin "guestlist" dispatch loginWidget
                        <input type="text" name="lastname" required>
                   <tr>
                     <td colspan="2">
-                       <button type="submit" .btn .btn-success>_{Msg.LoginTitle}
+                       <button type="submit" .btn .btn-success>Submit
               |]
 
 postLoginR :: YesodGuestList site => AuthHandler site TypedContent
@@ -74,4 +72,15 @@ postLoginR = do
   let usrname = (mappend firstname lastname)
   case nameMatch of
     Right guestId -> lift $ setCredsRedirect (Creds "guestlist" guestId [])
-    Left _ -> loginErrorMessageI LoginR (Msg.IdentifierNotFound usrname)
+    Left xs -> do
+      setMessageI (suggestionError xs)
+      redirect LoginR
+
+suggestionError :: [(Text, Text)] -> Text
+suggestionError [] = loginErrorStart <> loginErrorTechSupport
+suggestionError xs =
+  loginErrorStart <> "Perhaps you meant: " <>
+  (intercalate ", " ((\(x, y) -> (toTitle x) <> " " <> (toTitle y)) <$> xs)) <> ". " <> loginErrorTechSupport
+
+loginErrorStart =  "Unable to find a guest with that name. "
+loginErrorTechSupport = "If you are having problems logging in, please contact tobs169@gmail.com."
