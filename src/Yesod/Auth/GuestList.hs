@@ -73,14 +73,14 @@ postLoginR = do
   case nameMatch of
     Right guestId -> lift $ setCredsRedirect (Creds "guestlist" guestId [])
     Left xs -> do
-      setMessageI (suggestionError xs)
+      setMessageI (suggestionError (firstname <> " " <> lastname) xs)
       redirect LoginR
 
-suggestionError :: [(Text, Text)] -> Text
-suggestionError [] = loginErrorStart <> loginErrorTechSupport
-suggestionError xs =
-  loginErrorStart <> "Perhaps you meant: " <>
+suggestionError :: Text -> [(Text, Text)] -> Text
+suggestionError n [] = loginErrorStart n <> loginErrorTechSupport
+suggestionError n xs =
+  loginErrorStart n <> "Perhaps you meant: " <>
   (intercalate ", " ((\(x, y) -> (toTitle x) <> " " <> (toTitle y)) <$> xs)) <> ". " <> loginErrorTechSupport
 
-loginErrorStart =  "Unable to find a guest with that name. "
+loginErrorStart n =  "Unable to find a guest named '" <> n <> "'. "
 loginErrorTechSupport = "If you are having problems logging in, please contact tobs169@gmail.com."
