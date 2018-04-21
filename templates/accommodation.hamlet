@@ -1,4 +1,4 @@
-
-<h3> Accommodation 
-<p>
-        Hotel, motel, holiday inn
+<section .pagesection>
+        <h3 .section-heading> Accommodation 
+        <p>
+                Hotel, motel, holiday inn

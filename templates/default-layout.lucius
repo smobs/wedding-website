@@ -3,12 +3,19 @@
     background-color: white;
     min-height: 80vh;
     min-width: 70vw;
+    display:flex;
+    flex-flow: column;
 }
 .pageContent , .header {
     display:flex;
-    justify-content: space-around;
     align-items: center;
-    flex-flow:column
+    flex-flow: column;
+}
+.pageContent {
+    flex:1;
+}
+.header{  
+    justify-content: space-around;
 }
 .navbar {
     display:flex;
@@ -59,7 +66,13 @@ a {
     padding-right:3px;
 }
 .section-divider { 
-} 
+}
+.pagesection{
+    width:100%;
+}
+.section-heading {
+    text-align: center;
+}
 a:hover{
     background-color:#993399;
     color:white;
