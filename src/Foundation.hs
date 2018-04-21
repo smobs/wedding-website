@@ -102,37 +102,9 @@ instance Yesod App
   yesodMiddleware = defaultYesodMiddleware
   defaultLayout widget = do
     master <- getYesod
-    mmsg <- getMessage
+    mmsg <- getMessage 
     muser <- maybeAuthPair
-    mcurrentRoute <- getCurrentRoute
-        -- Get the breadcrumbs, as defined in the YesodBreadcrumbs instance.
-    (title, parents) <- breadcrumbs
-        -- Define the menu items of the header.
-    let menuItems =
-          [ NavbarRight $
-            MenuItem
-            { menuItemLabel = "Login"
-            , menuItemRoute = AuthR LoginR
-            , menuItemAccessCallback = isNothing muser
-            }
-          , NavbarRight $
-            MenuItem
-            { menuItemLabel = "Logout"
-            , menuItemRoute = AuthR LogoutR
-            , menuItemAccessCallback = isJust muser
-            }
-          ]
-    let navbarLeftMenuItems = [x | NavbarLeft x <- menuItems]
-    let navbarRightMenuItems = [x | NavbarRight x <- menuItems]
-    let navbarLeftFilteredMenuItems =
-          [x | x <- navbarLeftMenuItems, menuItemAccessCallback x]
-    let navbarRightFilteredMenuItems =
-          [x | x <- navbarRightMenuItems, menuItemAccessCallback x]
-        -- We break up the default layout into two components:
-        -- default-layout is the contents of the body tag, and
-        -- default-layout-wrapper is the entire page. Since the final
-        -- value passed to hamletToRepHtml cannot be a widget, this allows
-        -- you to use normal widget features in default-layout.
+    let mguestname = Guest.prettyName . snd <$> muser
     pc <- widgetToPageContent $ do $(widgetFile "default-layout")
     withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
     -- The page to be redirected to when authentication is required.

@@ -28,3 +28,6 @@
                 #{msg}
     <div .pageContent>
         ^{widget}
+    <div .footer>
+        $maybe guestname <- mguestname
+            <p>  Not #{guestname}? <a href=@{AuthR LogoutR}> Sign out. </a>
