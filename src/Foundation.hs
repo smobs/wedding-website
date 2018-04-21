@@ -190,10 +190,12 @@ instance YesodPersistRunner App where
 
 instance YesodGuestList App where
   isGuestOnList firstname lastname = do
-    x <- lift $ runDB $ getBy $ UniqueGuestName (Guest.makeConsistent firstname) (Guest.makeConsistent lastname)
+    let f = Guest.makeConsistent firstname
+    let l = Guest.makeConsistent lastname
+    x <- lift $ runDB $ getBy $ UniqueGuestName f l
     case x of
        Just (Entity _ g) -> pure $ Right (guestIdent g)
-       _ -> lift $ Left <$> (runDB $ closeMatch firstname lastname)
+       _ -> lift $ Left <$> (runDB $ closeMatch f l)
 
 closeMatch :: Text -> Text -> DB [(Text,Text)]
 closeMatch firstname lastname = do 
