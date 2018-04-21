@@ -78,3 +78,12 @@ a:hover{
 .splash {
     color: #993399;
 }
+.wedding-title{
+    border: black;
+border-width: 10px;
+border-style: double;
+border-radius: 100px;
+border-spacing: 20px;
+padding: 10px;
+
+}
