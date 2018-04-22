@@ -20,6 +20,7 @@ import Text.Jasmine (minifym)
 import Yesod.Auth.Dummy
 
 import qualified Data.CaseInsensitive as CI
+import qualified Data.Guest as Guest
 import qualified Data.Text.Encoding as TE
 import Text.Read (readMaybe)
 import Yesod.Auth.GuestList
@@ -28,7 +29,6 @@ import Yesod.Auth.OpenId (IdentifierType(Claimed), authOpenId)
 import Yesod.Core.Types (Logger)
 import qualified Yesod.Core.Unsafe as Unsafe
 import Yesod.Default.Util (addStaticContentExternal)
-import qualified Data.Guest as Guest
 
 -- | The foundation datatype for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -102,23 +102,22 @@ instance Yesod App
   yesodMiddleware = defaultYesodMiddleware
   defaultLayout widget = do
     master <- getYesod
-    mmsg <- getMessage 
+    mmsg <- getMessage
     muser <- maybeAuthPair
     let mguestname = Guest.prettyName . snd <$> muser
     pc <- widgetToPageContent $ do $(widgetFile "default-layout")
     withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
     -- The page to be redirected to when authentication is required.
-  authRoute _ = Just $ AuthR LoginR 
+  authRoute _ = Just $ AuthR LoginR
     -- Routes not requiring authentication.
   isAuthorized (AuthR _) _ = return Authorized
   isAuthorized FaviconR _ = return Authorized
   isAuthorized RobotsR _ = return Authorized
   isAuthorized (StaticR _) _ = return Authorized
-  isAuthorized TravelR _ = return Authorized
-  isAuthorized AccommodationR _ = return Authorized
-  isAuthorized InfoR _ = return Authorized
-  isAuthorized RsvpR _ = return Authorized
-  
+  isAuthorized TravelR _ = isAuthenticatedWithRedirect
+  isAuthorized AccommodationR _ = isAuthenticatedWithRedirect
+  isAuthorized InfoR _ = isAuthenticatedWithRedirect
+  isAuthorized RsvpR _ = isAuthenticatedWithRedirect
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
     -- expiration dates to be set far in the future without worry of
@@ -164,13 +163,17 @@ instance YesodGuestList App where
     let l = Guest.makeConsistent lastname
     x <- lift $ runDB $ getBy $ UniqueGuestName f l
     case x of
-       Just (Entity _ g) -> pure $ Right (guestIdent g)
-       _ -> lift $ Left <$> (runDB $ closeMatch f l)
+      Just (Entity _ g) -> pure $ Right (guestIdent g)
+      _ -> lift $ Left <$> (runDB $ closeMatch f l)
 
-closeMatch :: Text -> Text -> DB [(Text,Text)]
-closeMatch firstname lastname = do 
-    gs <- selectList ([GuestFirstName ==. firstname] ||. [GuestLastName ==. lastname]) [LimitTo 20]
-    pure $ (\(Entity _ (Guest _ f l _)) -> (f,l)) <$> gs
+closeMatch :: Text -> Text -> DB [(Text, Text)]
+closeMatch firstname lastname = do
+  gs <-
+    selectList
+      ([GuestFirstName ==. firstname] ||. [GuestLastName ==. lastname])
+      [LimitTo 20]
+  pure $ (\(Entity _ (Guest _ f l _)) -> (f, l)) <$> gs
+
 instance YesodAuth App where
   type AuthId App = GuestId
     -- Where to send a user after successful login
@@ -191,8 +194,7 @@ instance YesodAuth App where
   authPlugins app = extraAuthPlugins
         -- Enable authDummy login if enabled.
     where
-      extraAuthPlugins =
-        [authGuestList]
+      extraAuthPlugins = [authGuestList]
   authHttpManager = getHttpManager
 
 -- | Access function to determine if a user is logged in.
@@ -203,6 +205,11 @@ isAuthenticated = do
     case muid of
       Nothing -> Unauthorized "You must login to access this page"
       Just _ -> Authorized
+
+isAuthenticatedWithRedirect :: Handler AuthResult
+isAuthenticatedWithRedirect = do
+  muid <- requireAuthId
+  return Authorized
 
 instance YesodAuthPersist App where
   type AuthEntity App = Guest
