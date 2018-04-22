@@ -56,6 +56,8 @@ handleRsvpPost rsvp = do
           Couple one two -> do
             updateRsvp (snd one)
             updateRsvp (snd two)
+      setMessageI
+        ("Thanks for RSVPing.  You can update your RSVP up until 30th June." :: Text)
       redirect InfoR
     FormFailure pageErrors -> do
       defaultLayout $(widgetFile "errors")
