@@ -11,5 +11,4 @@
 /rsvp RsvpR GET POST
 /information InfoR GET
 /travel TravelR GET
-/ontheday OnTheDayR GET
 /accommodation AccommodationR GET

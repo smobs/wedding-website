@@ -16,9 +16,6 @@
             <li .pagelink>
                 <a href="@{AccommodationR}">
                     Accommodation
-            <li .pagelink>
-                <a href="@{OnTheDayR}">
-                    On the day
     $maybe msg <- mmsg
         <div .messagePane>
             <h5>
