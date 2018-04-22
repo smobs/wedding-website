@@ -19,7 +19,7 @@ var updateClock = function () {
   }
   // Display the result in the element with id="demo"
   document.getElementById("countdown").innerHTML = adapt(days, "day", "days") + adapt(hours, "hour", "hours")
-    + minutes + " minutes " + seconds + " seconds";
+    + adapt(minutes, "minute", "minutes") + adapt(seconds, "second", "seconds");
 
   // If the count down is finished, write some text
   if (distance < 0) {
