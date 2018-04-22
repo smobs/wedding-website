@@ -108,13 +108,12 @@ instance Yesod App
     pc <- widgetToPageContent $ do $(widgetFile "default-layout")
     withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
     -- The page to be redirected to when authentication is required.
-  authRoute _ = Just $ AuthR LoginR
+  authRoute _ = Just $ AuthR LoginR 
     -- Routes not requiring authentication.
   isAuthorized (AuthR _) _ = return Authorized
   isAuthorized FaviconR _ = return Authorized
   isAuthorized RobotsR _ = return Authorized
   isAuthorized (StaticR _) _ = return Authorized
-  isAuthorized InviteR _ = return Authorized
   isAuthorized TravelR _ = return Authorized
   isAuthorized AccommodationR _ = return Authorized
   isAuthorized InfoR _ = return Authorized
@@ -175,9 +174,9 @@ closeMatch firstname lastname = do
 instance YesodAuth App where
   type AuthId App = GuestId
     -- Where to send a user after successful login
-  loginDest _ = InviteR
+  loginDest _ = InfoR
     -- Where to send a user after logout
-  logoutDest _ = InviteR
+  logoutDest _ = InfoR
     -- Override the above two destinations when a Referer: header is present
   redirectToReferer _ = True
   authenticate Creds {..} =
