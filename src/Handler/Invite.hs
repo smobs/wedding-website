@@ -18,10 +18,6 @@ data PartyRsvp
            NamedRsvp
   deriving (Show)
 
-getInviteR :: Handler Html
-getInviteR = do
-  defaultLayout $(widgetFile "invite")
-
 getInfoR :: Handler Html
 getInfoR = do
   defaultLayout $(widgetFile "info")
@@ -60,7 +56,7 @@ handleRsvpPost rsvp = do
           Couple one two -> do
             updateRsvp (snd one)
             updateRsvp (snd two)
-      defaultLayout $(widgetFile "invite")
+      redirect InfoR
     FormFailure pageErrors -> do
       defaultLayout $(widgetFile "errors")
 

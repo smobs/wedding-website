@@ -42,24 +42,7 @@ authGuestList = AuthPlugin "guestlist" dispatch loginWidget
     dispatch _ _ = notFound
     loginWidget toMaster = do
       request <- getRequest
-      [whamlet|
-              $newline never
-              <form method="post" action="@{toMaster loginR}">
-                $maybe t <- reqToken request
-                  <input type=hidden name=#{defaultCsrfParamName} value=#{t}>
-                <table>
-                  <tr>
-                    <th>First name
-                    <td>
-                       <input type="text" name="firstname" required>
-                  <tr>
-                    <th>Last name
-                    <td>
-                       <input type="text" name="lastname" required>
-                  <tr>
-                    <td colspan="2">
-                       <button type="submit" .btn .btn-success>Submit
-              |]
+      $(widgetFile "login")
 
 postLoginR :: YesodGuestList site => AuthHandler site TypedContent
 postLoginR = do
