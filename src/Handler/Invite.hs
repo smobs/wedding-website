@@ -13,10 +13,7 @@ import Yesod
 type NamedRsvp = (Guest, GuestRsvp)
 
 data PartyRsvp
-  = Solo NamedRsvp
-  | Couple NamedRsvp
-           NamedRsvp
-  | Family NamedRsvp [NamedRsvp]
+  = PartyRsvp NamedRsvp [NamedRsvp]
   deriving (Show)
 
 getInfoR :: Handler Html
@@ -53,11 +50,7 @@ handleRsvpPost rsvp = do
     FormSuccess gs -> do
       runDB $ do
         case gs of
-          Solo me -> updateRsvp (snd me)
-          Couple one two -> do
-            updateRsvp (snd one)
-            updateRsvp (snd two)
-          Family x xs -> do
+          PartyRsvp x xs -> do
             traverse updateRsvp (snd <$> x : xs)
             pure ()
       setMessageI
@@ -79,19 +72,7 @@ defaultRsvp gid = GuestRsvp gid True Nothing False
 yesNo = radioFieldList [("Yes" :: Text, True), ("No" :: Text, False)]
 
 rsvpMForm :: PartyRsvp -> Html -> MForm Handler (FormResult PartyRsvp, Widget)
-rsvpMForm (Solo g) e = do
-  (r, w) <- rsvpMForm' g e
-  pure (Solo <$> r, w)
-rsvpMForm (Couple o t) e = do
-  (r1, w1) <- rsvpMForm' o e
-  (r2, w2) <- rsvpMForm' t mempty
-  let w =
-        [whamlet|
-      ^{w1}
-      ^{w2}
-    |]
-  pure (Couple <$> r1 <*> r2, w)
-rsvpMForm (Family x xs) e = do
+rsvpMForm (PartyRsvp x xs) e = do
   (r1, w1) <- rsvpMForm' x e
   others <- traverse (\y -> rsvpMForm' y mempty) xs
   let rs = traverse fst others
@@ -102,7 +83,7 @@ rsvpMForm (Family x xs) e = do
       $forall w' <- ws
         ^{w'}
     |]
-  pure (Family <$> r1 <*> rs, w)
+  pure (PartyRsvp <$> r1 <*> rs, w)
 
 
 
@@ -157,9 +138,9 @@ wholePartyRsvp :: Entity Guest -> Handler PartyRsvp
 wholePartyRsvp g =
   runDB $ do
     rsvp <- lookupRsvp g
-    poids <- plusone g
+    poids <- plusones g
     prsvp <- traverse lookupRsvp poids
-    pure (Family rsvp prsvp)
+    pure (PartyRsvp rsvp prsvp)
 
 lookupRsvp :: Entity Guest -> DB (NamedRsvp)
 lookupRsvp (Entity i g) = do
@@ -167,8 +148,8 @@ lookupRsvp (Entity i g) = do
     maybe (defaultRsvp i) (\(Entity _ rsvp) -> rsvp) <$> (getBy $ UniqueRsvp i)
   pure (g, rsvp)
 
-plusone :: Entity Guest -> DB ( [Entity Guest])
-plusone (Entity g (Guest _ _ _ partyId)) = do
+plusones :: Entity Guest -> DB ( [Entity Guest])
+plusones (Entity g (Guest _ _ _ partyId)) = do
   eguests <- lookupParty partyId
   let others = filter (\(Entity k _) -> k /= g) $ eguests
   pure others
