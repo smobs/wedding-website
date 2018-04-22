@@ -100,7 +100,7 @@ rsvpMForm' (guest, GuestRsvp gid coming diet bus) extra = do
           textField
           ("Can you come"
            { fsAttrs =
-               [("class", "dietcontrol"), ("placeholder", "I hate peas")]
+               [("class", "dietcontrol")]
            })
           (Just diet)
   let busW =
