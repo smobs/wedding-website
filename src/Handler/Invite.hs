@@ -16,6 +16,7 @@ data PartyRsvp
   = Solo NamedRsvp
   | Couple NamedRsvp
            NamedRsvp
+  | Family NamedRsvp [NamedRsvp]
   deriving (Show)
 
 getInfoR :: Handler Html
@@ -56,6 +57,9 @@ handleRsvpPost rsvp = do
           Couple one two -> do
             updateRsvp (snd one)
             updateRsvp (snd two)
+          Family x xs -> do
+            traverse updateRsvp (snd <$> x : xs)
+            pure ()
       setMessageI
         ("Thanks for RSVPing.  You can update your RSVP up until 30th June." :: Text)
       redirect InfoR
@@ -87,6 +91,21 @@ rsvpMForm (Couple o t) e = do
       ^{w2}
     |]
   pure (Couple <$> r1 <*> r2, w)
+rsvpMForm (Family x xs) e = do
+  (r1, w1) <- rsvpMForm' x e
+  others <- traverse (\y -> rsvpMForm' y mempty) xs
+  let rs = traverse fst others
+  let ws = snd <$> others 
+  let w =
+        [whamlet|
+      ^{w1}
+      $forall w' <- ws
+        ^{w'}
+    |]
+  pure (Family <$> r1 <*> rs, w)
+
+
+
 
 rsvpMForm' :: NamedRsvp -> Html -> MForm Handler (FormResult NamedRsvp, Widget)
 rsvpMForm' (guest, GuestRsvp gid coming diet bus) extra = do
@@ -138,12 +157,9 @@ wholePartyRsvp :: Entity Guest -> Handler PartyRsvp
 wholePartyRsvp g =
   runDB $ do
     rsvp <- lookupRsvp g
-    mplusone <- plusone g
-    case mplusone of
-      Just poid -> do
-        prsvp <- lookupRsvp poid
-        pure (Couple rsvp prsvp)
-      _ -> pure (Solo rsvp)
+    poids <- plusone g
+    prsvp <- traverse lookupRsvp poids
+    pure (Family rsvp prsvp)
 
 lookupRsvp :: Entity Guest -> DB (NamedRsvp)
 lookupRsvp (Entity i g) = do
@@ -151,11 +167,11 @@ lookupRsvp (Entity i g) = do
     maybe (defaultRsvp i) (\(Entity _ rsvp) -> rsvp) <$> (getBy $ UniqueRsvp i)
   pure (g, rsvp)
 
-plusone :: Entity Guest -> DB (Maybe (Entity Guest))
+plusone :: Entity Guest -> DB ( [Entity Guest])
 plusone (Entity g (Guest _ _ _ partyId)) = do
   eguests <- lookupParty partyId
   let others = filter (\(Entity k _) -> k /= g) $ eguests
-  pure (listToMaybe others)
+  pure others
 
 lookupParty :: Party -> DB [Entity Guest]
-lookupParty partyId = selectList [GuestParty ==. partyId] [LimitTo 2]
+lookupParty partyId = selectList [GuestParty ==. partyId] []
