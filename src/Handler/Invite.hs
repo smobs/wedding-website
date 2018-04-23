@@ -80,13 +80,12 @@ rsvpMForm (PartyRsvp x xs) e = do
   let ws = snd <$> others 
   let w =
         [whamlet|
-      <section .pagesection>
+      <section .rsvpsection>
         ^{w1}
       $forall w' <- ws
-        <section .pagesection>
-      
+        <section .rsvpsection>
           ^{w'}
-      <section .pagesection>
+      <section .rsvpsection>
         ^{wemail}
     |]
   pure (PartyRsvp <$> (r1 <*> remail) <*> rs, w)
@@ -138,7 +137,7 @@ rsvpMForm' (guest, GuestRsvp gid coming diet bus _) extra = do
   let widget =
         [whamlet|
       #{extra}
-      <h4> #{name}
+      <h4 .rsvp-name> #{name}
       <div>
         <label> 
           Are you able to attend?
