@@ -1,6 +1,13 @@
 .btn-rsvp {
-    background-color: purple;
+    background-color:#993399;;
     color: white;
+    width:88px;
+    height:36px;
+    border:none;
+}
+
+.btn-rsvp:hover {
+    background-color: purple
 }
 
 .rsvpsection {
