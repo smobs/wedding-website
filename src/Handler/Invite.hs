@@ -73,10 +73,10 @@ yesNo = radioFieldList [("Yes" :: Text, True), ("No" :: Text, False)]
 
 rsvpMForm :: PartyRsvp -> Html -> MForm Handler (FormResult PartyRsvp, Widget)
 rsvpMForm (PartyRsvp x xs) e = do
-  let remail = "foo@bar.com" 
-  (r1, w1) <- rsvpMForm' remail x e
-  others <- traverse (\y -> rsvpMForm' remail y mempty) xs
-  let rs = traverse fst others
+  let remail = pure "foo@bar.com" 
+  (r1, w1) <- rsvpMForm' x e
+  others <- traverse (\y -> rsvpMForm' y mempty) xs
+  let rs = traverse (\r -> (fst r) <*> remail) others
   let ws = snd <$> others 
   let w =
         [whamlet|
@@ -84,13 +84,13 @@ rsvpMForm (PartyRsvp x xs) e = do
       $forall w' <- ws
         ^{w'}
     |]
-  pure (PartyRsvp <$> r1 <*> rs, w)
+  pure (PartyRsvp <$> (r1 <*> remail) <*> rs, w)
 
 
 
 
-rsvpMForm' :: Text -> NamedRsvp -> Html -> MForm Handler (FormResult NamedRsvp, Widget)
-rsvpMForm' email (guest, GuestRsvp gid coming diet bus _) extra = do
+rsvpMForm' :: NamedRsvp -> Html -> MForm Handler (FormResult (Text -> NamedRsvp), Widget)
+rsvpMForm' (guest, GuestRsvp gid coming diet bus _) extra = do
   let comingW =
         mreq
           yesNo
@@ -132,7 +132,7 @@ rsvpMForm' email (guest, GuestRsvp gid coming diet bus _) extra = do
         ^{fvInput dietView}
     |]
   let guestRes =
-        (,) guest <$> (GuestRsvp gid <$> comingRes <*> dietRes <*> busRes <*> pure email)
+        ((,) guest <$>) <$> (GuestRsvp gid <$> comingRes <*> dietRes <*> busRes)
   pure (guestRes, widget)
 
 wholePartyRsvp :: Entity Guest -> Handler PartyRsvp
