@@ -27,20 +27,20 @@ newtype NamedRsvp =
 
 instance ToNamedRecord NamedRsvp where
   toNamedRecord (MkNamedRsvp (n, Nothing)) =
-    namedRecord ["Name" .= n, "Coming" .= na, "Diet" .= na, "Bus" .= na]
+    namedRecord ["Name" .= n, "Coming" .= na, "Diet" .= na, "Bus" .= na, "Email" .= na]
     where
       na :: Text
       na = "No reply"
-  toNamedRecord (MkNamedRsvp (n, Just (GuestRsvp _ c d b))) =
+  toNamedRecord (MkNamedRsvp (n, Just (GuestRsvp _ c d b e))) =
     namedRecord
-      ["Name" .= n, "Coming" .= yesBool c, "Diet" .= d, "Bus" .= yesBool b]
+      ["Name" .= n, "Coming" .= yesBool c, "Diet" .= d, "Bus" .= yesBool b, "Email" .= e]
     where
       yesBool :: Bool -> Text
       yesBool True = "Yes"
       yesBool False = "No"
 
 instance DefaultOrdered NamedRsvp where
-  headerOrder _ = ["Name", "Coming", "Diet", "Bus"]
+  headerOrder _ = ["Name", "Coming", "Diet", "Bus", "Email"]
 
 main :: IO ()
 main = do

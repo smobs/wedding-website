@@ -60,21 +60,22 @@ handleRsvpPost rsvp = do
       defaultLayout $(widgetFile "errors")
 
 updateRsvp :: GuestRsvp -> DB ()
-updateRsvp g@(GuestRsvp gid _ _ _) = do
+updateRsvp g@(GuestRsvp gid _ _ _ _) = do
   deleteBy (UniqueRsvp gid)
   insert_ g
 
 getGuest :: Handler (Entity Guest)
 getGuest = requireAuth
 
-defaultRsvp gid = GuestRsvp gid True Nothing False
+defaultRsvp gid = GuestRsvp gid True Nothing False ""
 
 yesNo = radioFieldList [("Yes" :: Text, True), ("No" :: Text, False)]
 
 rsvpMForm :: PartyRsvp -> Html -> MForm Handler (FormResult PartyRsvp, Widget)
 rsvpMForm (PartyRsvp x xs) e = do
-  (r1, w1) <- rsvpMForm' x e
-  others <- traverse (\y -> rsvpMForm' y mempty) xs
+  let remail = "foo@bar.com" 
+  (r1, w1) <- rsvpMForm' remail x e
+  others <- traverse (\y -> rsvpMForm' remail y mempty) xs
   let rs = traverse fst others
   let ws = snd <$> others 
   let w =
@@ -88,8 +89,8 @@ rsvpMForm (PartyRsvp x xs) e = do
 
 
 
-rsvpMForm' :: NamedRsvp -> Html -> MForm Handler (FormResult NamedRsvp, Widget)
-rsvpMForm' (guest, GuestRsvp gid coming diet bus) extra = do
+rsvpMForm' :: Text -> NamedRsvp -> Html -> MForm Handler (FormResult NamedRsvp, Widget)
+rsvpMForm' email (guest, GuestRsvp gid coming diet bus _) extra = do
   let comingW =
         mreq
           yesNo
@@ -131,7 +132,7 @@ rsvpMForm' (guest, GuestRsvp gid coming diet bus) extra = do
         ^{fvInput dietView}
     |]
   let guestRes =
-        (,) guest <$> (GuestRsvp gid <$> comingRes <*> dietRes <*> busRes)
+        (,) guest <$> (GuestRsvp gid <$> comingRes <*> dietRes <*> busRes <*> pure email)
   pure (guestRes, widget)
 
 wholePartyRsvp :: Entity Guest -> Handler PartyRsvp

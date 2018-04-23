@@ -16,6 +16,7 @@ GuestRsvp
     attending Bool
     dietaryRequirements Text Maybe
     needsTheBus Bool
+    email Text
     UniqueRsvp guestId
     deriving Show
 
