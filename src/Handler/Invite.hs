@@ -73,20 +73,41 @@ yesNo = radioFieldList [("Yes" :: Text, True), ("No" :: Text, False)]
 
 rsvpMForm :: PartyRsvp -> Html -> MForm Handler (FormResult PartyRsvp, Widget)
 rsvpMForm (PartyRsvp x xs) e = do
-  let remail = pure "foo@bar.com" 
-  (r1, w1) <- rsvpMForm' x e
+  (remail, wemail) <- emailForm x e 
+  (r1, w1) <- rsvpMForm' x mempty
   others <- traverse (\y -> rsvpMForm' y mempty) xs
   let rs = traverse (\r -> (fst r) <*> remail) others
   let ws = snd <$> others 
   let w =
         [whamlet|
-      ^{w1}
+      <section .pagesection>
+        ^{w1}
       $forall w' <- ws
-        ^{w'}
+        <section .pagesection>
+      
+          ^{w'}
+      <section .pagesection>
+        ^{wemail}
     |]
   pure (PartyRsvp <$> (r1 <*> remail) <*> rs, w)
 
-
+emailForm :: NamedRsvp -> Html -> MForm Handler (FormResult Text, Widget)
+emailForm (_, GuestRsvp _ _ _ _ email) extra = do
+  (emailRes, emailView) <- mreq
+          emailField
+          ("Unused"
+           { fsAttrs =
+               [("class", "emailcontrol")]
+           })
+          (if email == "" then Nothing else Just email)
+  let widget = [whamlet|
+      #{extra}
+      <div> 
+        <label>
+          Please provide an email address so we can contact you with updates about the wedding:
+        ^{fvInput emailView}
+    |]
+  pure (emailRes, widget)
 
 
 rsvpMForm' :: NamedRsvp -> Html -> MForm Handler (FormResult (Text -> NamedRsvp), Widget)
@@ -94,12 +115,12 @@ rsvpMForm' (guest, GuestRsvp gid coming diet bus _) extra = do
   let comingW =
         mreq
           yesNo
-          ("Can you come" {fsAttrs = [("class", "attending-control")]})
+          ("Unused" {fsAttrs = [("class", "attending-control")]})
           (Just coming)
   let dietW =
         mopt
           textField
-          ("Can you come"
+          ("Unused"
            { fsAttrs =
                [("class", "dietcontrol")]
            })
@@ -107,7 +128,7 @@ rsvpMForm' (guest, GuestRsvp gid coming diet bus _) extra = do
   let busW =
         mreq
           yesNo
-          ("Do you need a transfer between the reception and the venue"
+          ("Unused"
            {fsAttrs = [("class", "bus-control")]})
           (Just bus)
   (comingRes, comingView) <- comingW
