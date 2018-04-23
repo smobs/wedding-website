@@ -96,13 +96,13 @@ emailForm (_, GuestRsvp _ _ _ _ email) extra = do
           emailField
           ("Unused"
            { fsAttrs =
-               [("class", "emailcontrol")]
+               [("class", "email-control")]
            })
           (if email == "" then Nothing else Just email)
   let widget = [whamlet|
       #{extra}
-      <div> 
-        <label>
+      <div .question-block> 
+        <p .question>
           Please provide an email address so we can get in touch:
         ^{fvInput emailView}
     |]
@@ -121,7 +121,7 @@ rsvpMForm' (guest, GuestRsvp gid coming diet bus _) extra = do
           textField
           ("Unused"
            { fsAttrs =
-               [("class", "dietcontrol")]
+               [("class", "diet-control")]
            })
           (Just diet)
   let busW =
@@ -138,16 +138,16 @@ rsvpMForm' (guest, GuestRsvp gid coming diet bus _) extra = do
         [whamlet|
       #{extra}
       <h4 .rsvp-name> #{name}
-      <div>
-        <label> 
+      <div .question-block>
+        <p .question> 
           Are you able to attend?
         ^{fvInput comingView}
-      <div> 
-        <label>
+      <div .question-block> 
+        <p .question>
           Will you need transport between the reception and the venue?
         ^{fvInput busView}
-      <div>
-        <label>
+      <div .question-block>
+        <p>
           Do you have any dietary requirements?
         ^{fvInput dietView}
     |]

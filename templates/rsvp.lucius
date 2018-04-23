@@ -11,9 +11,26 @@
 }
 
 .rsvpsection {
-    margin:4vh 2vw 5vh 2vw
+    margin:3vh 2vw 3vh 2vw
+}
+
+.question-block {
+    margin:1vh 0px 1vh 0px
+}
+
+.diet-control {
+    min-width: 70%;
+}
+
+.email-control {
+    min-width: 70%;
 }
 
 .rsvp-name {
     margin: 1vh 0vw 1vh 0vw
+}
+
+.question {
+    margin-top: 1vh;
+    margin-bottom: 1vh;
 }
