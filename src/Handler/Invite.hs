@@ -103,7 +103,7 @@ emailForm (_, GuestRsvp _ _ _ _ email) extra = do
       #{extra}
       <div> 
         <label>
-          Please provide an email address so we can contact you with updates about the wedding:
+          Please provide an email address so we can get in touch:
         ^{fvInput emailView}
     |]
   pure (emailRes, widget)
