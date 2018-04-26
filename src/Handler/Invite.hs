@@ -144,7 +144,7 @@ rsvpMForm' (guest, GuestRsvp gid coming diet bus _) extra = do
         ^{fvInput comingView}
       <div .question-block> 
         <p .question>
-          Will you need transport between the reception and the venue?
+          Will you need transport between St Andrew's Church and Loseley Park?
         ^{fvInput busView}
       <div .question-block>
         <p>
