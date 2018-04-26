@@ -1,0 +1,17 @@
+
+.wedding-title{
+  border: black;
+  border-width: 10px;
+  border-style: double;
+  border-spacing: 20px;
+  padding: 10px;
+  text-align: center
+}
+
+.login-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80%;
+}

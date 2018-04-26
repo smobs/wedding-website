@@ -1,5 +1,5 @@
 <form method=post action=@{RsvpR} enctype=#{formEnctype}>
     ^{formWidget}
     <section .rsvpsection>
-        <button type="submit" class="btn-rsvp">
+        <button type="submit" class="btn">
             RSVP

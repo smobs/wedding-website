@@ -79,11 +79,16 @@ a:hover{
 .splash {
     color: #993399;
 }
-.wedding-title{
-    border: black;
-border-width: 10px;
-border-style: double;
-border-spacing: 20px;
-padding: 10px;
+.btn {
+    background-color:#993399;
+    color: white;
+    width:88px;
+    height:36px;
+    border:none;
+    font-size: 15px;
+    margin: 1vh 0vh 1vh 0vh;
+}
 
+.btn:hover {
+    background-color: purple
 }

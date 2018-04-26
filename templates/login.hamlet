@@ -1,18 +1,20 @@
-<h1 .wedding-title> Wedding of <span class="splash">Toby</span> and <span class="splash">Jennifer</span> 
-<h2 #countdown>
-<form method="post" action="@{toMaster loginR}">
-  $maybe t <- reqToken request
-    <input type=hidden name=#{defaultCsrfParamName} value=#{t}>
-  <table>
-    <tr>
-      <th>First name
-      <td>
-         <input type="text" name="firstname" required>
-    <tr>
-      <th>Last name
-      <td>
-         <input type="text" name="lastname" required>
-    <tr>
-      <td colspan="2">
-         <button type="submit" .btn .btn-success>Submit
-   
+<div .login-section>
+  <h1 .wedding-title> Wedding of <span class="splash">Toby</span> & <span class="splash">Jennifer</span> 
+  <h2 #countdown>
+  <form method="post" action="@{toMaster loginR}">
+    $maybe t <- reqToken request
+      <input type=hidden name=#{defaultCsrfParamName} value=#{t}>
+    <table>
+      <tr>
+        <th>First name
+        <td>
+           <input type="text" name="firstname" required>
+      <tr>
+        <th>Last name
+        <td>
+           <input type="text" name="lastname" required>
+      <tr>
+        <td>
+        <td>
+           <button type="submit" .btn>Log in
+          
