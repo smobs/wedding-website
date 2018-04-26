@@ -1,0 +1,9 @@
+
+.wedding-title{
+  border: black;
+  border-width: 10px;
+  border-style: double;
+  border-spacing: 20px;
+  padding: 10px;
+  text-align: center
+}
