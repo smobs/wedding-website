@@ -67,6 +67,7 @@ a {
 }
 .pagesection{
     width:100%;
+    margin: 1vh 1vw 1vh 1vw;
 }
 .section-heading {
     text-align: center;
