@@ -14,6 +14,7 @@
         <td>
            <input type="text" name="lastname" required>
       <tr>
-        <td colspan="2">
-           <button type="submit" .btn .btn-success>Submit
+        <td>
+        <td>
+           <button type="submit" .btn>Log in
           

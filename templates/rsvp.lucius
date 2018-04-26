@@ -1,15 +1,3 @@
-.btn-rsvp {
-    background-color:#993399;
-    color: white;
-    width:88px;
-    height:36px;
-    border:none;
-    font-size: 15px;
-}
-
-.btn-rsvp:hover {
-    background-color: purple
-}
 
 .rsvpsection {
     margin:3vh 2vw 3vh 2vw
