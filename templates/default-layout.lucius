@@ -92,3 +92,9 @@ a:hover{
 .btn:hover {
     background-color: purple
 }
+
+.footer {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
