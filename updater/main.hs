@@ -53,7 +53,7 @@ instance ToNamedRecord NamedRsvp where
       yesBool False = "No"
 
 instance DefaultOrdered NamedRsvp where
-  headerOrder _ = ["Name", "Coming", "Diet", "Bus", "Email"]
+  headerOrder _ = ["Name", "Coming", "Diet", "Bus","Song", "Email"]
 
 main :: IO ()
 main = do
