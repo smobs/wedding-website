@@ -4,8 +4,8 @@
 
 import Control.Monad.Logger (runStderrLoggingT)
 import Control.Monad.Logger (NoLoggingT)
-import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Char8 as BC
+import qualified Data.ByteString.Lazy as BL
 import Data.Csv
 import Data.Guest
 import Database.Persist
@@ -27,13 +27,26 @@ newtype NamedRsvp =
 
 instance ToNamedRecord NamedRsvp where
   toNamedRecord (MkNamedRsvp (n, Nothing)) =
-    namedRecord ["Name" .= n, "Coming" .= na, "Diet" .= na, "Bus" .= na, "Email" .= na]
+    namedRecord
+      [ "Name" .= n
+      , "Coming" .= na
+      , "Diet" .= na
+      , "Bus" .= na
+      , "Song" .= na
+      , "Email" .= na
+      ]
     where
       na :: Text
       na = "No reply"
-  toNamedRecord (MkNamedRsvp (n, Just (GuestRsvp _ c d b e))) =
+  toNamedRecord (MkNamedRsvp (n, Just (GuestRsvp _ c d b m e))) =
     namedRecord
-      ["Name" .= n, "Coming" .= yesBool c, "Diet" .= d, "Bus" .= yesBool b, "Email" .= e]
+      [ "Name" .= n
+      , "Coming" .= yesBool c
+      , "Diet" .= d
+      , "Bus" .= yesBool b
+      , "Song" .= m
+      , "Email" .= e
+      ]
     where
       yesBool :: Bool -> Text
       yesBool True = "Yes"
@@ -72,8 +85,9 @@ inputs =
                 (Download <$> (strArgument (metavar "TARGETFILE")))
                 (progDesc "Update the guest list")))
   in Inputs <$> cmd <*>
-     (BC.pack <$> strOption
-       (long "connection" <> short 'c' <> metavar "CONNECTION" <> value connStr))
+     (BC.pack <$>
+      strOption
+        (long "connection" <> short 'c' <> metavar "CONNECTION" <> value connStr))
 
 decodeGuests :: BL.ByteString -> Either String (Vector Guest)
 decodeGuests b =
