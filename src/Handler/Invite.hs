@@ -98,7 +98,7 @@ emailForm (_, GuestRsvp _ _ _ _ _ email) extra = do
            { fsAttrs =
                [("class", "email-control")]
            })
-          (if email == "" then Nothing else Just email)
+          (Nothing)
   let widget = [whamlet|
       #{extra}
       <div .question-block> 
