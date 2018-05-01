@@ -60,14 +60,14 @@ handleRsvpPost rsvp = do
       defaultLayout $(widgetFile "errors")
 
 updateRsvp :: GuestRsvp -> DB ()
-updateRsvp g@(GuestRsvp gid _ _ _ _) = do
+updateRsvp g@(GuestRsvp gid _ _ _ _ _) = do
   deleteBy (UniqueRsvp gid)
   insert_ g
 
 getGuest :: Handler (Entity Guest)
 getGuest = requireAuth
 
-defaultRsvp gid = GuestRsvp gid True Nothing False ""
+defaultRsvp gid = GuestRsvp gid True Nothing False  Nothing ""
 
 yesNo = radioFieldList [("Yes" :: Text, True), ("No" :: Text, False)]
 
@@ -91,7 +91,7 @@ rsvpMForm (PartyRsvp x xs) e = do
   pure (PartyRsvp <$> (r1 <*> remail) <*> rs, w)
 
 emailForm :: NamedRsvp -> Html -> MForm Handler (FormResult Text, Widget)
-emailForm (_, GuestRsvp _ _ _ _ email) extra = do
+emailForm (_, GuestRsvp _ _ _ _ _ email) extra = do
   (emailRes, emailView) <- mreq
           emailField
           ("Unused"
@@ -110,7 +110,7 @@ emailForm (_, GuestRsvp _ _ _ _ email) extra = do
 
 
 rsvpMForm' :: NamedRsvp -> Html -> MForm Handler (FormResult (Text -> NamedRsvp), Widget)
-rsvpMForm' (guest, GuestRsvp gid coming diet bus _) extra = do
+rsvpMForm' (guest, GuestRsvp gid coming diet bus music _) extra = do
   let comingW =
         mreq
           yesNo
@@ -130,9 +130,18 @@ rsvpMForm' (guest, GuestRsvp gid coming diet bus _) extra = do
           ("Unused"
            {fsAttrs = [("class", "bus-control")]})
           (Just bus)
+  let musicW =
+        mopt
+          textField
+          ("Unused"
+           { fsAttrs =
+               [("class", "music-control")]
+           })
+          (Just music)
   (comingRes, comingView) <- comingW
   (dietRes, dietView) <- dietW
   (busRes, busView) <- busW
+  (musicRes, musicView) <- musicW
   let name = prettyName guest
   let widget =
         [whamlet|
@@ -149,10 +158,14 @@ rsvpMForm' (guest, GuestRsvp gid coming diet bus _) extra = do
       <div .question-block>
         <p>
           Do you have any dietary requirements?
-        ^{fvInput dietView}
+        ^{fvInput dietView} 
+      <div .question-block>
+        <p>
+          What song will get you on the dancefloor?
+        ^{fvInput musicView}
     |]
   let guestRes =
-        ((,) guest <$>) <$> (GuestRsvp gid <$> comingRes <*> dietRes <*> busRes)
+        ((,) guest <$>) <$> (GuestRsvp gid <$> comingRes <*> dietRes <*> busRes <*> musicRes)
   pure (guestRes, widget)
 
 wholePartyRsvp :: Entity Guest -> Handler PartyRsvp

@@ -11,6 +11,9 @@
     min-width: 70%;
 }
 
+.music-control {
+    min-width: 70%;
+}
 .email-control {
     min-width: 70%;
 }
