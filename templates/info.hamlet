@@ -1,7 +1,4 @@
 <section .pagesection>
-    <h3 .section-heading> Children 
-    <p>We regret that we are unable to extend an invitation to children outside of the family.
-<section .pagesection>
     <h3 .section-heading> Dress code
     <p>Morning dress encouraged – Suits welcomed – Hats admired 
 <section .pagesection>
@@ -17,6 +14,9 @@
     <h3 .section-heading> Loseley park rules 
     <p>No confetti can be thrown at Loseley Park.
     <p>To prevent damage to the wooden floors, guests are asked not to wear metal tipped stiletto heels.
+<section .pagesection>
+    <h3 .section-heading> Children 
+    <p>We regret that we are unable to extend an invitation to children outside of the family.
 <section .pagesection>
     <h3 .section-heading> Contact details
     <p>Please send any questions to <a href="mailto:jenniferellis1@hotmail.co.uk?Subject=Wedding">jenniferellis1@hotmail.co.uk</a>
