@@ -105,7 +105,9 @@ instance Yesod App
     mmsg <- getMessage
     muser <- maybeAuthPair
     let mguestname = Guest.prettyName . snd <$> muser
-    pc <- widgetToPageContent $ do $(widgetFile "default-layout")
+    pc <- widgetToPageContent $ do 
+      setTitle "Toby loves Jenny"
+      $(widgetFile "default-layout")
     withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
     -- The page to be redirected to when authentication is required.
   authRoute _ = Just $ AuthR LoginR
