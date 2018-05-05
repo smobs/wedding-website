@@ -2,4 +2,4 @@
     ^{formWidget}
     <section .rsvpsection>
         <button type="submit" class="btn">
-            RSVP
+            Submit
